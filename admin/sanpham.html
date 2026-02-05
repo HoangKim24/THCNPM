@@ -1,0 +1,68 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/admin/sanpham.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý sản phẩm</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Coopmart Admin</h2>
+    <ul>
+      <li><a href="admin.html">📊 Dashboard</a></li>
+      <li><a href="sanpham.html" class="active">📦 Sản phẩm</a></li>
+      <li><a href="danhmuc.html">📁 Danh mục</a></li>
+      <li><a href="hoadon.html">📝 Hóa đơn</a></li>
+    </ul>
+  </aside>
+
+  <!-- Nội dung chính -->
+  <main class="dashboard">
+    <h1>Quản Lý Sản Phẩm</h1>
+
+    <!-- Form thêm sản phẩm -->
+    <section class="form-section">
+      <h2>Thêm sản phẩm</h2>
+      <form id="formThem">
+        <input type="hidden" name="MaSanPham" id="inputMaSanPham" />
+        <input type="text" name="TenSanPham" placeholder="Tên sản phẩm" required />
+        <input type="number" name="DonGia" placeholder="Giá" required />
+        <input type="text" name="DonViTinh" placeholder="Đơn vị tính" value="Cái" required />
+        <input type="number" name="MaDanhMuc" placeholder="Mã danh mục" required />
+        <input type="file" name="HinhAnh" accept="image/*" id="inputHinhAnh" />
+        <img id="previewHinhAnh" src="" alt="Ảnh xem trước" style="max-width:80px; display:none; margin-top:8px;" />
+        <button type="submit" id="btnSubmit">Thêm</button>
+        <button type="button" id="btnHuy" style="display:none;margin-left:8px;">Hủy</button>
+      </form>
+      <p id="ketQuaThem" class="success-message" style="display:none;"></p>
+    </section>
+
+    <!-- Bảng sản phẩm -->
+    <section>
+      <h2>Danh sách sản phẩm</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>ĐVT</th>
+            <th>Danh mục</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="dssp"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="upload.js"></script>
+  <script src="sanpham.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/invoices.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hóa đơn của tôi | Siêu thị</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="products.html">Sản phẩm</a></li>
+      <li><a href="invoices.html" class="home-active"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+    </div>
+  </header>
+  <section class="invoice-page">
+    <h1>🧾 Danh sách hóa đơn của bạn</h1>
+    <div id="user-invoices"></div>
+    <a href="index.html" class="btn">Quay về trang chủ</a>
+    <style>
+      .invoice-list-box {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px #0001;
+        max-width: 700px;
+        margin: 32px auto;
+        padding: 32px 28px 24px 28px;
+        font-size: 1.08rem;
+      }
+      .invoice-list-box h1 {
+        text-align: center;
+        margin-bottom: 18px;
+        color: #2d8f4e;
+      }
+      .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 18px;
+      }
+      .invoice-table th, .invoice-table td {
+        border-bottom: 1px solid #eee;
+        padding: 8px 0;
+        text-align: left;
+      }
+      .invoice-table th {
+        color: #2d8f4e;
+        background: #f8f8f8;
+      }
+      .invoice-table tr:last-child td {
+        border-bottom: none;
+      }
+      .invoice-table .btn {
+        background: #2d8f4e;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 12px;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .invoice-table .btn:hover {
+        background: #27ae60;
+      }
+      .invoice-table .status {
+        font-weight: bold;
+        color: #e67e22;
+      }
+      .invoice-table .status.xacnhan {
+        color: #27ae60;
+      }
+      @media (max-width: 800px) {
+        .invoice-list-box { padding: 12px 2vw; }
+        .invoice-table th, .invoice-table td { font-size: 0.98em; }
+      }
+    </style>
+  </section>
+  <script src="user.js"></script>
+  <script src="invoices.js"></script>
+  <script>
+// Bọc nội dung vào box đẹp
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('user-invoices');
+  if (container) {
+    const html = container.innerHTML;
+    container.innerHTML = `<div class='invoice-list-box'>${html}</div>`;
+  }
+});
+</script>
+</body>
+</html>

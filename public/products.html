@@ -1,0 +1,42 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/products.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sản phẩm | Siêu thị</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="products.html" class="home-active">Sản phẩm</a></li>
+      <li><a href="cart.html"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
+      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+      <i class="bx bx-caret-down"></i>
+    </div>
+  </header>
+
+  <section class="products-page">
+    <div class="heading horizontal-heading">
+      <h1><span>Danh sách</span> <span>Sản phẩm</span></h1>
+    </div>
+    <div class="products-container" id="products-list"></div>
+  </section>
+
+  <script src="user.js"></script>
+  <script src="products.js"></script>
+</body>
+</html>

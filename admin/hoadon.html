@@ -1,0 +1,55 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/admin/hoadon.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý hóa đơn</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <h2>Coopmart Admin</h2>
+    <ul>
+      <li><a href="admin.html">📊 Dashboard</a></li>
+      <li><a href="sanpham.html">📦 Sản phẩm</a></li>
+      <li><a href="danhmuc.html">📁 Danh mục</a></li>
+      <li><a href="hoadon.html" class="active">🧾 Hóa đơn</a></li>
+    </ul>
+  </aside>
+
+  <main class="dashboard">
+    <h1>Danh sách hóa đơn</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã</th>
+          <th>Ngày</th>
+          <th>Khách hàng</th>
+          <th>SĐT</th>
+          <th>Trạng thái</th>
+          <th>Xem</th>
+          <th>Xóa</th>
+        </tr>
+      </thead>
+      <tbody id="dsHoaDon"></tbody>
+    </table>
+
+    <!-- 🧾 Modal chi tiết hóa đơn (ẩn lúc đầu) -->
+    <div id="chiTietModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Chi tiết hóa đơn</h2>
+        <ul id="dsSanPham"></ul>
+        <p id="tongTien"></p>
+        <button id="xacNhanBtn">✅ Xác nhận đơn</button>
+        <button id="dongModalBtn">❌ Đóng</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="hoadon.js"></script>
+</body>
+</html>

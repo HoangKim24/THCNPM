@@ -1,0 +1,151 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/cart.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng | Siêu thị</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="products.html">Sản phẩm</a></li>
+      <li><a href="cart.html" class="home-active"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
+      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+    </div>
+  </header>
+
+  <main class="cart-page">
+    <div class="cart-page-inner">
+      <h1 class="cart-page-title"><i class="bx bx-cart"></i> Giỏ hàng của bạn</h1>
+      <div id="cart-list" class="cart-list"></div>
+      <div id="cart-summary" class="cart-summary"></div>
+      <div class="cart-actions">
+        <a href="products.html" class="btn btn-outline"><i class="bx bx-shopping-bag"></i> Tiếp tục mua sắm</a>
+        <a href="checkout.html" id="cart-checkout-btn" class="btn btn-primary"><i class="bx bx-credit-card"></i> Thanh toán</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="user.js"></script>
+  <script>
+    const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+
+    function escapeHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const cartList = document.getElementById('cart-list');
+      const cartSummary = document.getElementById('cart-summary');
+      const checkoutBtn = document.getElementById('cart-checkout-btn');
+
+      if (cart.length === 0) {
+        cartList.innerHTML = `
+          <div class="cart-empty">
+            <i class="bx bx-cart"></i>
+            <p>Giỏ hàng trống</p>
+            <a href="products.html" class="btn">Mua sắm ngay</a>
+          </div>
+        `;
+        cartSummary.innerHTML = '';
+        if (checkoutBtn) checkoutBtn.style.opacity = '0.6';
+        return;
+      }
+
+      fetch('/api/sanpham')
+        .then(res => res.json())
+        .then(products => {
+          let html = '<table class="cart-table"><thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead><tbody>';
+          let total = 0;
+
+          cart.forEach(item => {
+            const product = products.find(p => p.MaSanPham == item.MaSanPham);
+            const imgSrc = product && product.HinhAnh ? 'images/' + product.HinhAnh : DEFAULT_IMG;
+            const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+            const qty = item.quantity || 1;
+            const subtotal = price * qty;
+            total += subtotal;
+            const name = escapeHtml(item.name);
+            html += `
+              <tr class="cart-row" data-name="${name}">
+                <td class="cart-cell-product">
+                  <img src="${imgSrc}" alt="" onerror="this.src='${DEFAULT_IMG}'">
+                  <span>${name}</span>
+                </td>
+                <td class="cart-cell-price">${price.toLocaleString('vi-VN')}₫</td>
+                <td class="cart-cell-qty">
+                  <button type="button" class="cart-qty-btn minus" data-name="${name}">−</button>
+                  <span class="cart-qty-num">${qty}</span>
+                  <button type="button" class="cart-qty-btn plus" data-name="${name}">+</button>
+                </td>
+                <td class="cart-cell-total">${subtotal.toLocaleString('vi-VN')}₫</td>
+                <td class="cart-cell-remove">
+                  <button type="button" class="cart-remove" data-name="${name}" title="Xóa"><i class="bx bx-trash"></i></button>
+                </td>
+              </tr>
+            `;
+          });
+
+          html += '</tbody></table>';
+          cartList.innerHTML = html;
+          cartSummary.innerHTML = `
+            <div class="cart-total-row">
+              <span>Tổng cộng:</span>
+              <strong id="cart-grand-total">${total.toLocaleString('vi-VN')}₫</strong>
+            </div>
+          `;
+
+          if (checkoutBtn) checkoutBtn.style.opacity = '1';
+
+          document.querySelectorAll('.cart-qty-btn.plus').forEach(btn => {
+            btn.onclick = () => updateQty(btn.dataset.name, 1);
+          });
+          document.querySelectorAll('.cart-qty-btn.minus').forEach(btn => {
+            btn.onclick = () => updateQty(btn.dataset.name, -1);
+          });
+          document.querySelectorAll('.cart-remove').forEach(btn => {
+            btn.onclick = () => removeItem(btn.dataset.name);
+          });
+        })
+        .catch(() => {
+          cartList.innerHTML = '<p class="cart-error">Không thể tải thông tin sản phẩm.</p>';
+        });
+    }
+
+    function updateQty(name, delta) {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const item = cart.find(i => i.name === name);
+      if (!item) return;
+      item.quantity += delta;
+      if (item.quantity <= 0) cart = cart.filter(i => i.name !== name);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(name) {
+      let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      cart = cart.filter(i => i.name !== name);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCart);
+  </script>
+</body>
+</html>

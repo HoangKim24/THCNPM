@@ -1,0 +1,60 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/admin/danhmuc.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quản lý danh mục</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Coopmart Admin</h2>
+    <ul>
+      <li><a href="admin.html">📊 Dashboard</a></li>
+      <li><a href="sanpham.html">📦 Sản phẩm</a></li>
+      <li><a href="danhmuc.html" class="active">📁 Danh mục</a></li>
+      <li><a href="hoadon.html">📝 Hóa đơn</a></li>
+    </ul>
+  </aside>
+
+  <!-- Nội dung chính -->
+  <main class="dashboard">
+    <h1>📁 Quản Lý Danh Mục</h1>
+
+    <!-- Form thêm danh mục -->
+    <section class="form-section">
+      <form id="formThemDanhMuc">
+        <input type="hidden" id="MaDanhMuc" name="MaDanhMuc" />
+        <input type="text" id="TenDanhMuc" name="TenDanhMuc" placeholder="Tên danh mục" required />
+        <input type="file" id="HinhAnhDanhMuc" name="HinhAnh" accept="image/*" />
+        <img id="previewHinhAnhDanhMuc" src="" alt="Ảnh xem trước" style="max-width:80px; display:none; margin-top:8px;" />
+        <button type="submit" id="btnSubmitDM">Thêm</button>
+        <button type="button" id="btnHuyDM" style="display:none;margin-left:8px;">Hủy</button>
+      </form>
+      <p id="thongBao" style="display: none;"></p>
+    </section>
+
+    <!-- Bảng danh mục -->
+    <section class="table-section">
+      <table>
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên danh mục</th>
+            <th>Xử lý</th>
+          </tr>
+        </thead>
+        <tbody id="bangDanhMuc"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="upload.js"></script>
+  <script src="danhmuc.js"></script>
+</body>
+</html>

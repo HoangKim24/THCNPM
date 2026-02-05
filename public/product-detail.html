@@ -1,0 +1,119 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/product-detail.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết sản phẩm | Siêu thị</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="products.html">Sản phẩm</a></li>
+      <li><a href="cart.html"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
+      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+    </div>
+  </header>
+
+  <main class="product-detail-page">
+    <div id="product-detail-content" class="product-detail-wrap">
+      <p class="loading">Đang tải...</p>
+    </div>
+  </main>
+
+  <script src="user.js"></script>
+  <script>
+    const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+
+    if (!id) {
+      document.getElementById('product-detail-content').innerHTML = '<p class="error-msg">Không tìm thấy sản phẩm. <a href="products.html">Xem tất cả sản phẩm</a></p>';
+    } else {
+      fetch('/api/sanpham')
+        .then(res => res.json())
+        .then(products => {
+          const sp = products.find(p => p.MaSanPham == id);
+          const wrap = document.getElementById('product-detail-content');
+          if (!sp) {
+            wrap.innerHTML = '<p class="error-msg">Sản phẩm không tồn tại. <a href="products.html">Quay lại danh sách</a></p>';
+            return;
+          }
+          const imgSrc = sp.HinhAnh ? 'images/' + sp.HinhAnh : DEFAULT_IMG;
+          const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
+          const name = (sp.TenSanPham || '').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+          const unit = (sp.DonViTinh || '').replace(/</g, '&lt;');
+
+          wrap.innerHTML = `
+            <a href="products.html" class="back-link"><i class="bx bx-arrow-back"></i> Về danh sách sản phẩm</a>
+            <div class="product-detail-card">
+              <div class="product-detail-image">
+                <img src="${imgSrc}" alt="${name}" onerror="this.src='${DEFAULT_IMG}'">
+              </div>
+              <div class="product-detail-info">
+                <h1>${name}</h1>
+                <p class="product-detail-unit">Đơn vị: ${unit || '—'}</p>
+                <p class="product-detail-price">${price.toLocaleString('vi-VN')}₫</p>
+                <div class="product-detail-actions">
+                  <div class="qty-group">
+                    <label>Số lượng:</label>
+                    <div class="qty-controls">
+                      <button type="button" class="qty-btn minus" aria-label="Giảm">−</button>
+                      <input type="number" id="detail-qty" value="1" min="1" max="999" readonly>
+                      <button type="button" class="qty-btn plus" aria-label="Tăng">+</button>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-add-detail" data-id="${sp.MaSanPham}" data-name="${name}" data-price="${price}">
+                    <i class="bx bx-cart-add"></i> Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const qtyInput = document.getElementById('detail-qty');
+          const minusBtn = wrap.querySelector('.qty-btn.minus');
+          const plusBtn = wrap.querySelector('.qty-btn.plus');
+          const addBtn = wrap.querySelector('.btn-add-detail');
+
+          minusBtn.addEventListener('click', () => {
+            const v = Math.max(1, parseInt(qtyInput.value, 10) - 1);
+            qtyInput.value = v;
+          });
+          plusBtn.addEventListener('click', () => {
+            const v = Math.min(999, parseInt(qtyInput.value, 10) + 1);
+            qtyInput.value = v;
+          });
+
+          addBtn.addEventListener('click', () => {
+            const qty = parseInt(qtyInput.value, 10) || 1;
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(i => i.MaSanPham == sp.MaSanPham);
+            if (existing) existing.quantity += qty;
+            else cart.push({ MaSanPham: sp.MaSanPham, name: sp.TenSanPham, price, quantity: qty });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            if (confirm('Đã thêm vào giỏ. Bạn có muốn đến trang giỏ hàng không?')) {
+              window.location.href = 'cart.html';
+            }
+          });
+        })
+        .catch(() => {
+          document.getElementById('product-detail-content').innerHTML = '<p class="error-msg">Lỗi tải sản phẩm. <a href="products.html">Quay lại</a></p>';
+        });
+    }
+  </script>
+</body>
+</html>

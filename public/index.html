@@ -1,0 +1,183 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/index.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siêu thị trái cây & rau củ | Mua sắm tươi ngon</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="home-page">
+  <header class="main-header">
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link active">Trang chủ</a>
+      <a href="categories.html" class="nav-link">Danh mục</a>
+      <a href="products.html" class="nav-link">Sản phẩm</a>
+      <a href="cart.html" class="nav-link nav-cart"><i class="bx bx-cart"></i> Giỏ hàng</a>
+      <a href="invoices.html" class="nav-link"><i class="bx bx-receipt"></i> Hóa đơn</a>
+    </nav>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+    </div>
+  </header>
+
+  <section class="hero-home">
+    <div class="hero-bg">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-badge">Trái cây & Rau củ tươi mỗi ngày</p>
+      <h1 class="hero-heading">Chọn món ngon –<br>Ăn lành mạnh</h1>
+      <p class="hero-desc">Giao tận nơi, chất lượng đảm bảo. Mua sắm dễ dàng với giá tốt nhất.</p>
+      <div class="hero-cta">
+        <a href="products.html" class="btn btn-primary"><i class="bx bx-shopping-bag"></i> Mua sắm ngay</a>
+        <a href="categories.html" class="btn btn-secondary">Xem danh mục</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-categories">
+    <div class="container">
+      <div class="section-head">
+        <h2>Danh mục sản phẩm</h2>
+        <p>Chọn loại bạn cần</p>
+      </div>
+      <div id="home-categories" class="categories-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-products">
+    <div class="container">
+      <div class="section-head">
+        <h2>Sản phẩm nổi bật</h2>
+        <p>Gợi ý cho bạn</p>
+      </div>
+      <div id="home-products" class="products-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+      <div class="section-cta">
+        <a href="products.html" class="btn btn-outline">Xem tất cả sản phẩm <i class="bx bx-right-arrow-alt"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-cta-block">
+    <div class="container">
+      <div class="cta-block">
+        <h2>Sẵn sàng mua sắm?</h2>
+        <p>Hàng nghìn sản phẩm tươi sạch đang chờ bạn.</p>
+        <a href="products.html" class="btn btn-white"><i class="bx bx-cart"></i> Đến trang sản phẩm</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
+          <p>Trái cây & rau củ tươi – Chất lượng, giá tốt.</p>
+        </div>
+        <div class="footer-links">
+          <a href="products.html">Sản phẩm</a>
+          <a href="categories.html">Danh mục</a>
+          <a href="cart.html">Giỏ hàng</a>
+          <a href="invoices.html">Hóa đơn</a>
+        </div>
+      </div>
+      <p class="footer-copy">© Siêu Thị 4 anh em. Dự án THCNPM.</p>
+    </div>
+  </footer>
+
+  <script src="user.js"></script>
+  <script>
+    (function() {
+      const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+
+      fetch('/api/danhmuc')
+        .then(r => r.json())
+        .then(data => {
+          const el = document.getElementById('home-categories');
+          if (!el) return;
+          el.innerHTML = (data.slice(0, 6) || []).map(dm => {
+            const img = dm.HinhAnh ? 'images/' + dm.HinhAnh : DEFAULT_IMG;
+            return `
+              <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="category-card">
+                <div class="category-card-img"><img src="${img}" alt="${(dm.TenDanhMuc||'').replace(/"/g,'&quot;')}" onerror="this.src='${DEFAULT_IMG}'"></div>
+                <span class="category-card-name">${(dm.TenDanhMuc||'Danh mục').replace(/</g,'&lt;')}</span>
+              </a>
+            `;
+          }).join('');
+        })
+        .catch(() => {
+          const el = document.getElementById('home-categories');
+          if (el) el.innerHTML = '<p class="section-error">Không tải được danh mục.</p>';
+        });
+
+      fetch('/api/sanpham')
+        .then(r => r.json())
+        .then(data => {
+          const el = document.getElementById('home-products');
+          if (!el) return;
+          const list = (data || []).slice(0, 8);
+          el.innerHTML = list.map(sp => {
+            const img = sp.HinhAnh ? 'images/' + sp.HinhAnh : DEFAULT_IMG;
+            const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
+            const name = (sp.TenSanPham||'').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+            return `
+              <div class="product-card">
+                <a href="product-detail.html?id=${sp.MaSanPham}" class="product-card-link">
+                  <div class="product-card-img"><img src="${img}" alt="${name}" onerror="this.src='${DEFAULT_IMG}'"></div>
+                  <h3>${name}</h3>
+                  <p class="product-card-price">${price.toLocaleString('vi-VN')}₫</p>
+                </a>
+                <button type="button" class="btn btn-sm add-to-cart-home" data-id="${sp.MaSanPham}" data-name="${sp.TenSanPham}" data-price="${price}"><i class="bx bx-cart-add"></i> Thêm vào giỏ</button>
+              </div>
+            `;
+          }).join('');
+
+          document.querySelectorAll('.add-to-cart-home').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+              e.preventDefault();
+              const id = parseInt(this.dataset.id, 10);
+              const name = this.dataset.name;
+              const price = parseFloat(this.dataset.price);
+              let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+              const existing = cart.find(i => i.MaSanPham === id);
+              if (existing) existing.quantity += 1;
+              else cart.push({ MaSanPham: id, name, price, quantity: 1 });
+              localStorage.setItem('cart', JSON.stringify(cart));
+              if (window.renderCart) window.renderCart();
+              this.textContent = ' Đã thêm!';
+              setTimeout(() => { this.innerHTML = '<i class="bx bx-cart-add"></i> Thêm vào giỏ'; }, 1500);
+            });
+          });
+        })
+        .catch(() => {
+          const el = document.getElementById('home-products');
+          if (el) el.innerHTML = '<p class="section-error">Không tải được sản phẩm.</p>';
+        });
+    })();
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/admin/admin.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trang thống kê | Delicacy</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <aside class="sidebar">
+  <h2>Coopmart Admin</h2>
+  <ul>
+     <li><a href="admin.html">📊 Dashboard</a></li>
+   <li><a href="sanpham.html">📦 Sản phẩm</a></li>
+<li><a href="danhmuc.html">📁 Danh mục</a></li>
+<li><a href="hoadon.html">📝 Hóa đơn</a></li>
+  </ul>
+</aside>
+  <main class="dashboard">
+  <h1>Trang Quản Trị</h1>
+  <section class="stats-grid">
+    <div class="stat-box">
+      <h3>Sản phẩm</h3>
+      <p id="stat-sanpham">...</p>
+    </div>
+    <div class="stat-box">
+      <h3>Danh mục</h3>
+      <p id="stat-danhmuc">...</p>
+    </div>
+    <div class="stat-box">
+      <h3>Tài khoản</h3>
+      <p id="stat-user">...</p>
+    </div>
+    <div class="stat-box">
+      <h3>Doanh thu tháng</h3>
+      <p id="stat-doanhthu">...</p>
+    </div>
+  </section>
+
+  <!-- Biểu đồ doanh thu theo tháng -->
+  <section style="background:#fff;max-width:900px;margin:32px auto 0 auto;padding:32px 24px 24px 24px;border-radius:16px;box-shadow:0 2px 16px #0001;">
+    <h2 style="text-align:center;margin-bottom:18px;color:#2d8f4e;">Biểu đồ doanh thu theo tháng</h2>
+    <canvas id="chartDoanhThu" height="80"></canvas>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</main>
+<script src="stats.js"></script>
+</body>
+</html>

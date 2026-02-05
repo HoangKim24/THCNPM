@@ -1,0 +1,136 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/invoice.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hóa đơn | Siêu thị</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="products.html">Sản phẩm</a></li>
+      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+    </div>
+  </header>
+  <section class="invoice-page">
+    <h1>🧾 Chi tiết hóa đơn</h1>
+    <div id="invoice-details"></div>
+    <a href="invoices.html" class="btn">Quay về danh sách hóa đơn</a>
+    <style>
+      .invoice-box {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px #0001;
+        max-width: 500px;
+        margin: 32px auto;
+        padding: 32px 28px 24px 28px;
+        font-size: 1.08rem;
+      }
+      .invoice-box h2 {
+        text-align: center;
+        margin-bottom: 18px;
+        color: #2d8f4e;
+      }
+      .invoice-info {
+        margin-bottom: 18px;
+      }
+      .invoice-info p {
+        margin: 4px 0;
+      }
+      .invoice-products {
+        margin-bottom: 18px;
+      }
+      .invoice-products table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .invoice-products th, .invoice-products td {
+        border-bottom: 1px solid #eee;
+        padding: 6px 0;
+        text-align: left;
+      }
+      .invoice-products th {
+        color: #2d8f4e;
+      }
+      .invoice-summary {
+        text-align: right;
+        margin-top: 10px;
+      }
+      .invoice-summary p {
+        margin: 2px 0;
+      }
+      .status {
+        font-weight: bold;
+        color: #e67e22;
+      }
+      .status.xacnhan {
+        color: #27ae60;
+      }
+    </style>
+  </section>
+  <script src="user.js"></script>
+  <script>
+    // Hiển thị chi tiết hóa đơn theo mã trên URL (?ma=...)
+    async function showInvoiceDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const ma = params.get('ma');
+      const invoiceDetails = document.getElementById('invoice-details');
+      if (!ma) {
+        invoiceDetails.innerHTML = '<div class="invoice-box"><p>Không tìm thấy hóa đơn.</p></div>';
+        return;
+      }
+      try {
+        const res = await fetch(`/api/hoadon/${ma}`);
+        if (!res.ok) throw new Error('Lỗi khi lấy hóa đơn');
+        const data = await res.json();
+        if (!data.hoaDon) {
+          invoiceDetails.innerHTML = '<div class="invoice-box"><p>Không tìm thấy hóa đơn.</p></div>';
+          return;
+        }
+        let html = `<div class="invoice-box">`;
+        html += `<h2>🧾 HÓA ĐƠN MUA HÀNG</h2>`;
+        html += `<div class="invoice-info">`;
+        html += `<p><strong>Mã hóa đơn:</strong> #${data.hoaDon.MaHoaDon}</p>`;
+        if (data.hoaDon.TenKhachHang) html += `<p><strong>Khách hàng:</strong> ${data.hoaDon.TenKhachHang}</p>`;
+        if (data.hoaDon.SoDienThoai) html += `<p><strong>Số điện thoại:</strong> ${data.hoaDon.SoDienThoai}</p>`;
+        html += `<p><strong>Ngày đặt:</strong> ${data.hoaDon.NgayLap ? new Date(data.hoaDon.NgayLap).toLocaleDateString('vi-VN') : ''}</p>`;
+        html += `<p><strong>Trạng thái:</strong> <span class="status${data.hoaDon.TrangThai === 'Đã xác nhận' ? ' xacnhan' : ''}">${data.hoaDon.TrangThai || 'Đã đặt'}</span></p>`;
+        html += `</div>`;
+        html += `<div class="invoice-products">`;
+        html += `<table><thead><tr><th>Sản phẩm</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>`;
+        data.chiTiet.forEach(item => {
+          const dg = typeof item.DonGia === 'number' ? item.DonGia : parseFloat(item.DonGia) || 0;
+          html += `<tr><td>${item.TenSanPham}</td><td>${item.SoLuong}</td><td>${dg.toLocaleString('vi-VN')}₫</td><td>${(dg * item.SoLuong).toLocaleString('vi-VN')}₫</td></tr>`;
+        });
+        html += `</tbody></table></div>`;
+        let tong = data.chiTiet.reduce((sum, item) => sum + (parseFloat(item.DonGia) || 0) * (item.SoLuong || 0), 0);
+        let vat = Math.round(tong * 0.1);
+        let tongThanhToan = tong + vat;
+        html += `<div class="invoice-summary">`;
+        html += `<p><strong>Tổng tiền hàng:</strong> ${tong.toLocaleString('vi-VN')}₫</p>`;
+        html += `<p><strong>VAT (10%):</strong> ${vat.toLocaleString('vi-VN')}₫</p>`;
+        html += `<p><strong>Tổng thanh toán:</strong> <span style='color:#27ae60;font-size:1.15em'>${tongThanhToan.toLocaleString('vi-VN')}₫</span></p>`;
+        html += `</div></div>`;
+        invoiceDetails.innerHTML = html;
+      } catch (e) {
+        invoiceDetails.innerHTML = '<div class="invoice-box"><p>Lỗi khi tải hóa đơn.</p></div>';
+      }
+    }
+    showInvoiceDetail();
+  </script>
+</body>
+</html>

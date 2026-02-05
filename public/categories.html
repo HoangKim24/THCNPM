@@ -1,0 +1,74 @@
+<script>
+  if (!location.href.startsWith("http://localhost:3000")) {
+    location.href = "http://localhost:3000/categories.html";
+  }
+</script>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh mục | Siêu thị</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
+    <ul class="navbar">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="categories.html" class="home-active">Categories</a></li>
+      <li><a href="products.html">Sản phẩm</a></li>
+      <li><a href="#" id="cart-toggle"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
+      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
+    </ul>
+    <div class="profile">
+      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <span>Khách</span>
+      <i class="bx bx-caret-down"></i>
+    </div>
+  </header>
+
+  <div id="cart-panel" class="cart-panel hidden">
+    <h3>🛒 Giỏ hàng của bạn</h3>
+    <ul id="cart-items"></ul>
+    <p class="cart-total">Tổng cộng: <span id="cart-total">0₫</span></p>
+    <a href="products.html" class="btn" style="margin-top:10px; display:inline-block; text-align:center;">Đến sản phẩm</a>
+  </div>
+
+  <section class="products-page">
+    <div class="heading horizontal-heading">
+      <h1><span>Danh mục</span> <span>Sản phẩm</span></h1>
+    </div>
+    <div id="categories-list" class="products-container"></div>
+  </section>
+
+  <script src="user.js"></script>
+  <script>
+    const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+    fetch('/api/danhmuc')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('categories-list');
+        list.innerHTML = '';
+        data.forEach(dm => {
+          const imgSrc = (dm.HinhAnh ? 'images/' + dm.HinhAnh : DEFAULT_IMG);
+          list.innerHTML += `
+            <div class="product-box">
+              <img src="${imgSrc}" alt="${dm.TenDanhMuc || 'Danh mục'}" class="category-img" onerror="this.src='${DEFAULT_IMG}'">
+              <div class="product-info">
+                <h3>${dm.TenDanhMuc || 'Danh mục'}</h3>
+              </div>
+              <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="btn">Xem sản phẩm</a>
+            </div>
+          `;
+        });
+      })
+      .catch(err => {
+        console.error('Lỗi khi lấy danh mục:', err);
+        document.getElementById('categories-list').innerHTML = '<p>Không thể tải danh mục. Kiểm tra kết nối database.</p>';
+      });
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
