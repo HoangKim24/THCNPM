@@ -25,15 +25,12 @@ if (process.env.DB_DOMAIN) {
 
 (async () => {
   try {
+    console.log('🔄 Đang kết nối tới:', dbConfig.server);
     await sql.connect(dbConfig);
-    await sql.query`
-      INSERT INTO SanPham (TenSanPham, DonGia, DonViTinh, MaDanhMuc)
-      VALUES (N'Test bánh mì', 25000, N'Cái', 6)
-    `;
-    console.log('✅ Test chèn thành công');
+    const result = await sql.query('SELECT 1 as test');
+    console.log('✅ Kết nối thành công!', result.recordset);
   } catch (err) {
-    console.error('❌ Lỗi:', err.message);
-    console.error(err);
+    console.error('❌ Lỗi kết nối:', err.message);
   } finally {
     await sql.close();
   }

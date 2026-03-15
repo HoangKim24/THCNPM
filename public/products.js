@@ -7,40 +7,100 @@ function getDanhMucFromUrl() {
   return ma ? parseInt(ma, 10) : null;
 }
 
-// Tải danh sách sản phẩm từ server
-fetch('/api/sanpham')
-  .then(res => res.json())
-  .then(data => {
-    const maDanhMuc = getDanhMucFromUrl();
-    let listSp = data;
-    if (maDanhMuc) {
-      listSp = data.filter(sp => sp.MaDanhMuc === maDanhMuc);
-    }
+// Tải danh sách sản phẩm và danh mục
+let allProducts = [];
+let allCategories = [];
 
-    const list = document.getElementById('products-list');
-    list.innerHTML = '';
-    listSp.forEach(sp => {
-      const imgSrc = sp.HinhAnh ? 'images/' + sp.HinhAnh : DEFAULT_IMG;
-      const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
-      list.innerHTML += `
-        <div class="product-box">
-          <a href="product-detail.html?id=${sp.MaSanPham}" class="product-box-link">
-            <img src="${imgSrc}" alt="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" onerror="this.src='${DEFAULT_IMG}'">
-            <div class="product-info">
-              <h3>${(sp.TenSanPham || '').replace(/</g, '&lt;')}</h3>
-              <p class="weight">${(sp.DonViTinh || '').replace(/</g, '&lt;')}</p>
-              <p class="price">${price.toLocaleString('vi-VN')}₫</p>
-            </div>
-          </a>
-          <button class="btn add-to-cart" data-id="${sp.MaSanPham}" data-name="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" data-price="${price}">
-            Thêm vào giỏ <i class='bx bx-cart-alt'></i>
-          </button>
-        </div>
-      `;
+async function initProducts() {
+  try {
+    const [pResp, cResp] = await Promise.all([
+      fetch('/api/sanpham'),
+      fetch('/api/danhmuc')
+    ]);
+    allProducts = await pResp.json();
+    allCategories = await cResp.json();
+
+    // Điền danh mục vào filter
+    const catFilter = document.getElementById('category-filter');
+    allCategories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.MaDanhMuc;
+      opt.textContent = cat.TenDanhMuc;
+      catFilter.appendChild(opt);
     });
 
+    // Check URL params
+    const maDanhMuc = getDanhMucFromUrl();
+    if (maDanhMuc) catFilter.value = maDanhMuc;
+
+    renderProducts();
+
+    // Gán sự kiện filter
+    document.getElementById('search-input').addEventListener('input', renderProducts);
+    document.getElementById('category-filter').addEventListener('change', renderProducts);
+    document.getElementById('price-filter').addEventListener('change', renderProducts);
+
+  } catch (err) {
+    console.error('Lỗi khởi tạo:', err);
+    document.getElementById('products-list').innerHTML = '<p>Không thể tải dữ liệu.</p>';
+  }
+}
+
+function renderProducts() {
+  const searchTerm = document.getElementById('search-input').value.toLowerCase();
+  const catId = document.getElementById('category-filter').value;
+  const priceRange = document.getElementById('price-filter').value;
+
+  let filtered = allProducts.filter(sp => {
+    // Search
+    const matchSearch = sp.TenSanPham.toLowerCase().includes(searchTerm);
+    // Category
+    const matchCat = catId === 'all' || sp.MaDanhMuc == catId;
+    // Price
+    let matchPrice = true;
+    const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
+    if (priceRange === '0-50000') matchPrice = price < 50000;
+    else if (priceRange === '50000-100000') matchPrice = price >= 50000 && price <= 100000;
+    else if (priceRange === '100000-above') matchPrice = price > 100000;
+
+    return matchSearch && matchCat && matchPrice;
+  });
+
+  const list = document.getElementById('products-list');
+  list.innerHTML = '';
+  
+  if (filtered.length === 0) {
+    list.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px; color: #666;">Không tìm thấy sản phẩm nào khớp với bộ lọc.</p>';
+    return;
+  }
+
+  filtered.forEach(sp => {
+    const imgSrc = sp.HinhAnh ? 'images/' + sp.HinhAnh : DEFAULT_IMG;
+    const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
+    list.innerHTML += `
+      <div class="product-box">
+        <a href="product-detail.html?id=${sp.MaSanPham}" class="product-box-link">
+          <img src="${imgSrc}" alt="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" onerror="this.src='${DEFAULT_IMG}'">
+          <div class="product-info">
+            <h3>${(sp.TenSanPham || '').replace(/</g, '&lt;')}</h3>
+            <p class="weight">${(sp.DonViTinh || '').replace(/</g, '&lt;')}</p>
+            <p class="price">${price.toLocaleString('vi-VN')}₫</p>
+          </div>
+        </a>
+        <button class="btn add-to-cart" data-id="${sp.MaSanPham}" data-name="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" data-price="${price}">
+          Thêm vào giỏ <i class='bx bx-cart-alt'></i>
+        </button>
+      </div>
+    `;
+  });
+
+  // Re-attach listeners
+  attachCartEvents();
+}
+
+function attachCartEvents() {
     document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.onclick = () => {
         const id = parseInt(btn.dataset.id, 10);
         const name = btn.dataset.name;
         const price = parseFloat(btn.dataset.price);
@@ -57,14 +117,11 @@ fetch('/api/sanpham')
         capNhatGioPublic();
         const panel = document.getElementById('cart-panel');
         if (panel) panel.classList.remove('hidden');
-      });
+      };
     });
-  })
-  .catch(err => {
-    console.error('Lỗi tải sản phẩm:', err);
-    const list = document.getElementById('products-list');
-    if (list) list.innerHTML = '<p>Không thể tải sản phẩm. Kiểm tra kết nối server/database.</p>';
-  });
+}
+
+initProducts();
 
 // Trang sản phẩm: nút "Thanh toán" chuyển sang cart.html (trang giỏ hàng có nút Thanh toán)
 

@@ -1,0 +1,153 @@
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1.25rem 10%;
+    transition: all 0.3s ease;
+}
+
+header.shadow {
+    padding: 0.75rem 10%;
+    box-shadow: var(--shadow-md);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-color);
+    gap: 0.5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.logo i {
+    font-size: 2rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    color: #43e97b;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.navbar a {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+}
+
+.navbar a:hover,
+.navbar .home-active {
+    color: var(--text-color);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 1rem 0.4rem 0.4rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.profile:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.profile img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile span {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+#menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+    display: none;
+}
+
+/* Home Page specific Header Layout */
+.home-page .main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+.home-page .main-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.home-page .nav-link {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Footer Styles */
+.main-footer {
+  background: var(--text-color);
+  color: rgba(255,255,255,0.85);
+  padding: 2.5rem 0 1.5rem;
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-brand .logo { color: #fff; margin-bottom: 0.5rem; }
+.footer-brand .logo .bx { color: var(--light-green-color); }
+.footer-brand p { font-size: 0.9rem; opacity: 0.9; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 0.95rem; }
+.footer-links a:hover { color: var(--light-green-color); }
+.footer-copy { font-size: 0.85rem; opacity: 0.7; text-align: center; margin: 0; }

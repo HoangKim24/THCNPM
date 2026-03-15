@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý người dùng | Admin</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">
+      <i class="bx bxs-shopping-bag-alt"></i>
+      <span>AdminPanel</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="admin.html"><i class="bx bx-grid-alt"></i> Thống kê</a></li>
+      <li><a href="sanpham.html"><i class="bx bx-box"></i> Sản phẩm</a></li>
+      <li><a href="danhmuc.html"><i class="bx bx-category"></i> Danh mục</a></li>
+      <li><a href="users.html" class="active"><i class="bx bx-user"></i> Người dùng</a></li>
+      <li><a href="/index.html" class="logout"><i class="bx bx-log-out"></i> Thoát</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <header>
+      <h1>Quản lý người dùng</h1>
+      <div class="user-wrapper">
+        <img src="../images/HinhAnh-1752415674712-693980431.jpg" width="40px" height="40px" alt="">
+        <div>
+          <h4>KIM</h4>
+          <small>Admin</small>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="table-container" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="text-align: left; border-bottom: 2px solid #eee;">
+              <th style="padding: 12px;">ID</th>
+              <th style="padding: 12px;">Tên đăng nhập</th>
+              <th style="padding: 12px;">Họ tên</th>
+              <th style="padding: 12px;">Quyền</th>
+              <th style="padding: 12px;">Trạng thái</th>
+              <th style="padding: 12px;">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="users-list">
+            <!-- Data loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    async function loadUsers() {
+      try {
+        const resp = await fetch('/api/admin/users');
+        const users = await resp.json();
+        const tbody = document.getElementById('users-list');
+        tbody.innerHTML = users.map(u => `
+          <tr style="border-bottom: 1px solid #f0f0f0;">
+            <td style="padding: 12px;">${u.MaNguoiDung}</td>
+            <td style="padding: 12px;">${u.Username}</td>
+            <td style="padding: 12px;">${u.FullName || '—'}</td>
+            <td style="padding: 12px;"><span style="padding: 4px 8px; border-radius: 4px; background: ${u.Role==='admin'?'#e3f2fd':'#f5f5f5'}; color: ${u.Role==='admin'?'#1976d2':'#666'}; font-size: 0.85rem;">${u.Role}</span></td>
+            <td style="padding: 12px;"><span style="color: ${u.Status==='active'?'#2e7d32':'#d32f2f'}; font-weight: 600;">${u.Status}</span></td>
+            <td style="padding: 12px;">
+              ${u.Role !== 'admin' ? `
+                <button onclick="toggleStatus(${u.MaNguoiDung}, '${u.Status}')" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: ${u.Status==='active'?'#ffebee':'#e8f5e9'}; color: ${u.Status==='active'?'#c62828':'#2e7d32'}; font-weight: 600;">
+                  ${u.Status==='active'?'Khóa':'Mở khóa'}
+                </button>
+              ` : '—'}
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error('Lỗi tải người dùng:', e);
+      }
+    }
+
+    async function toggleStatus(id, currentStatus) {
+      if (!confirm(`Bạn có chắc chắn muốn ${currentStatus==='active'?'khóa':'mở khóa'} người dùng này?`)) return;
+      try {
+        const resp = await fetch(`/api/admin/users/${id}/toggle-status`, { method: 'POST' });
+        if (resp.ok) loadUsers();
+      } catch (e) {
+        alert('Lỗi khi cập nhật trạng thái');
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

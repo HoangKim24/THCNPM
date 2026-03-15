@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng ký tài khoản</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<body class="login-page">
+  <div class="login-background-text">Tạo tài khoản mới để bắt đầu mua sắm</div>
+  <div class="login-container">
+    <div class="login-form">
+      <h2>Đăng ký</h2>
+      <div id="register-msg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
+      <input type="text" id="reg-fullname" placeholder="Họ và tên" required />
+      <input type="text" id="reg-username" placeholder="Tên đăng nhập" required />
+      <input type="password" id="reg-password" placeholder="Mật khẩu" required />
+      <input type="tel" id="reg-phone" placeholder="Số điện thoại" required />
+      <button type="button" id="btn-register">Đăng ký ngay</button>
+      <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
+        Đã có tài khoản? <a href="login.html" style="color: #6c63ff; font-weight: 600;">Đăng nhập</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('btn-register').addEventListener('click', async () => {
+      const fullName = document.getElementById('reg-fullname').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-password').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const msg = document.getElementById('register-msg');
+
+      if (!fullName || !username || !password || !phone) {
+        msg.textContent = 'Vui lòng điền đầy đủ thông tin!';
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, username, password, phone })
+        });
+
+        const result = await resp.json();
+        if (resp.ok) {
+          alert('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
+          window.location.href = 'login.html';
+        } else {
+          msg.textContent = result.message || 'Có lỗi xảy ra.';
+        }
+      } catch (e) {
+        msg.textContent = 'Lỗi kết nối server.';
+      }
+    });
+  </script>
+</body>
+</html>

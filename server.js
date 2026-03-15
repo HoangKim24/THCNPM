@@ -1,10 +1,8 @@
-// (Đặt đoạn này SAU khi khai báo const app = express();)
-// 🗑️ Xóa hóa đơn
-// Đặt sau khi khai báo app
 const openurl = require('openurl');
 const express = require('express');
 const path = require('path');
 const sql = require('mssql');
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
@@ -29,29 +27,76 @@ const users = [
 
 // 🗃️ Cấu hình database
 const dbConfig = {
-  server: 'MY-CHEESE',
-  database: 'CoopmartDB',
+  server: process.env.DB_SERVER || 'localhost',
+  database: process.env.DB_NAME || 'CoopmartDB',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   options: { 
-    encrypt: false, 
-    trustServerCertificate: true
-  },
-  authentication: {
-    type: 'ntlm',
-    options: {
-      domain: '',
-      userName: '',
-      password: ''
-    }
+    encrypt: process.env.DB_ENCRYPT === 'true', 
+    trustServerCertificate: process.env.DB_TRUST_CERT === 'true'
   }
 };
 
-// 🚪 Đăng nhập
-app.post('/login', (req, res) => {
+// Nếu có DB_DOMAIN, dùng NTLM (Windows Auth), nếu không dùng SQL Auth mặc định
+if (process.env.DB_DOMAIN) {
+  dbConfig.authentication = {
+    type: 'ntlm',
+    options: {
+      domain: process.env.DB_DOMAIN,
+      userName: process.env.DB_USER,
+      password: process.env.DB_PASSWORD
+    }
+  };
+}
+
+// 🚪 Đăng nhập (Sử dụng Database)
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const found = users.find(u => u.username === username && u.password === password);
-  if (!found) return res.send('Sai tài khoản hoặc mật khẩu!');
-  const redirectUrl = found.role === 'admin' ? '/admin/admin.html' : '/index.html?user=' + encodeURIComponent(found.username);
-  res.redirect(redirectUrl);
+  
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query`
+      SELECT Username, Role FROM NguoiDung 
+      WHERE Username = ${username} AND Password = ${password} AND Status = 'active'
+    `;
+    
+    if (result.recordset.length === 0) {
+      return res.send('<script>alert("Sai tài khoản hoặc mật khẩu!"); window.location.href="/login.html";</script>');
+    }
+    
+    const user = result.recordset[0];
+    const redirectUrl = user.Role === 'admin' ? '/admin/admin.html' : '/index.html?user=' + encodeURIComponent(user.Username);
+    res.redirect(redirectUrl);
+  } catch (err) {
+    console.error('❌ Lỗi login:', err.message);
+    res.status(500).send('Lỗi hệ thống khi đăng nhập');
+  } finally {
+    sql.close();
+  }
+});
+
+// 📝 Đăng ký tài khoản
+app.post('/api/auth/register', async (req, res) => {
+  const { username, password, fullName, phone } = req.body;
+  try {
+    await sql.connect(dbConfig);
+    // Kiểm tra trùng username
+    const checkUser = await sql.query`SELECT Username FROM NguoiDung WHERE Username = ${username}`;
+    if (checkUser.recordset.length > 0) {
+      return res.status(400).json({ message: 'Tên đăng nhập đã tồn tại!' });
+    }
+    
+    await sql.query`
+      INSERT INTO NguoiDung (Username, Password, Role, FullName, Phone)
+      VALUES (${username}, ${password}, 'user', ${fullName}, ${phone})
+    `;
+    res.json({ message: 'Đăng ký thành công!' });
+  } catch (err) {
+    console.error('❌ Lỗi đăng ký:', err.message);
+    res.status(500).json({ message: 'Lỗi server khi đăng ký' });
+  } finally {
+    sql.close();
+  }
 });
 
 // 🛒 Thêm sản phẩm (có upload ảnh)
@@ -172,7 +217,6 @@ app.get('/api/hoadon/:id', async (req, res) => {
   try {
     await sql.connect(dbConfig);
     const hoaDon = await sql.query`SELECT * FROM HoaDon WHERE MaHoaDon = ${maHoaDon}`;
-    // Join để lấy tên sản phẩm
     const chiTiet = await sql.query`
       SELECT cthd.*, sp.TenSanPham FROM ChiTietHoaDon cthd
       JOIN SanPham sp ON cthd.MaSanPham = sp.MaSanPham
@@ -182,6 +226,52 @@ app.get('/api/hoadon/:id', async (req, res) => {
   } catch (err) {
     console.error('❌ Lỗi lấy hóa đơn:', err.message);
     res.status(500).send('Lỗi truy vấn hóa đơn');
+  } finally {
+    sql.close();
+  }
+});
+
+// 📊 API Thống kê (Mới)
+app.get('/api/stats', async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+    
+    // Đếm sản phẩm
+    const countSP = await sql.query('SELECT COUNT(*) as count FROM SanPham');
+    // Đếm danh mục
+    const countDM = await sql.query('SELECT COUNT(*) as count FROM DanhMuc');
+    // Doanh thu (các hóa đơn đã xác nhận)
+    const revenue = await sql.query(`
+      SELECT SUM(ct.SoLuong * ct.DonGia) as totalRevenue
+      FROM ChiTietHoaDon ct
+      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
+      WHERE h.TrangThai = N'Đã xác nhận'
+    `);
+    
+    // Doanh thu theo tháng (12 tháng gần nhất)
+    const monthlyRevenue = await sql.query(`
+      SELECT 
+        MONTH(h.NgayLap) as month, 
+        YEAR(h.NgayLap) as year, 
+        SUM(ct.SoLuong * ct.DonGia) as revenue
+      FROM ChiTietHoaDon ct
+      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
+      WHERE h.TrangThai = N'Đã xác nhận'
+        AND h.NgayLap >= DATEADD(month, -12, GETDATE())
+      GROUP BY YEAR(h.NgayLap), MONTH(h.NgayLap)
+      ORDER BY year DESC, month DESC
+    `);
+
+    res.json({
+      products: countSP.recordset[0].count,
+      categories: countDM.recordset[0].count,
+      totalRevenue: revenue.recordset[0].totalRevenue || 0,
+      monthly: monthlyRevenue.recordset,
+      users: 2 // Hardcoded for now until DB Users is implemented
+    });
+  } catch (err) {
+    console.error('❌ Lỗi thống kê:', err.message);
+    res.status(500).json({ error: 'Lỗi khi lấy thống kê' });
   } finally {
     sql.close();
   }
@@ -234,48 +324,81 @@ app.post('/api/danhmuc', uploadDanhMuc.single('HinhAnh'), async (req, res) => {
   }
 });
 
-// 🗑️ Xóa danh mục
-app.delete('/api/danhmuc/:id', async (req, res) => {
-  const maDanhMuc = req.params.id;
+// 👥 API Quản lý người dùng (Admin)
+app.get('/api/admin/users', async (req, res) => {
   try {
     await sql.connect(dbConfig);
-    // Xóa các sản phẩm thuộc danh mục này trước
-    await sql.query`DELETE FROM SanPham WHERE MaDanhMuc = ${maDanhMuc}`;
-    // Sau đó xóa danh mục
-    await sql.query`DELETE FROM DanhMuc WHERE MaDanhMuc = ${maDanhMuc}`;
-    res.json({ message: '✅ Đã xóa danh mục và các sản phẩm thuộc danh mục này!' });
+    const result = await sql.query`SELECT MaNguoiDung, Username, Role, FullName, Phone, Status FROM NguoiDung`;
+    res.json(result.recordset);
   } catch (err) {
-    console.error('❌ Lỗi xóa danh mục:', err.message);
-    res.status(500).send('Lỗi khi xóa danh mục');
+    res.status(500).send(err.message);
   } finally {
     sql.close();
   }
 });
 
-// ✏️ Sửa danh mục
-app.put('/api/danhmuc/:id', uploadDanhMuc.none(), async (req, res) => {
-  const id = req.params.id;
-  const { TenDanhMuc } = req.body;
-  console.log('🛠️ Đang sửa danh mục:', id, '→', TenDanhMuc);
-  console.log('📦 Dữ liệu từ body:', req.body);
-
-
-  if (!TenDanhMuc || !id) {
-    return res.status(400).send('Thiếu dữ liệu');
-  }
-
+app.post('/api/admin/users/:id/toggle-status', async (req, res) => {
+  const { id } = req.params;
   try {
     await sql.connect(dbConfig);
-    const ketQua = await sql.query`
-      UPDATE DanhMuc SET TenDanhMuc = ${TenDanhMuc} WHERE MaDanhMuc = ${id}
-    `;
-    if (ketQua.rowsAffected[0] === 0) {
-      return res.status(404).send('Không tìm thấy danh mục');
-    }
-    res.json({ message: '✅ Đã sửa danh mục!' });
+    const user = await sql.query`SELECT Status FROM NguoiDung WHERE MaNguoiDung = ${id}`;
+    if (user.recordset.length === 0) return res.status(404).send('Không tìm thấy user');
+    
+    const newStatus = user.recordset[0].Status === 'active' ? 'blocked' : 'active';
+    await sql.query`UPDATE NguoiDung SET Status = ${newStatus} WHERE MaNguoiDung = ${id}`;
+    res.json({ message: 'Cập nhật thành công', newStatus });
   } catch (err) {
-    console.error('❌ Lỗi sửa danh mục:', err.message);
-    res.status(500).send('Lỗi khi sửa danh mục');
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+// 📊 Thống kê doanh thu và báo cáo
+app.get('/api/stats', async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+    
+    // 1. Tổng doanh thu (Chỉ tính hóa đơn đã xác nhận)
+    const revenueRes = await sql.query`
+      SELECT SUM(ct.SoLuong * ct.DonGia) as TotalRevenue
+      FROM ChiTietHoaDon ct
+      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
+      WHERE h.TrangThai = N'Đã xác nhận'
+    `;
+    
+    // 2. Số lượng sản phẩm, danh mục, user
+    const counts = await sql.query`
+      SELECT 
+        (SELECT COUNT(*) FROM SanPham) as products,
+        (SELECT COUNT(*) FROM DanhMuc) as categories,
+        (SELECT COUNT(*) FROM NguoiDung) as users
+    `;
+    
+    // 3. Doanh thu theo tháng (6 tháng gần nhất)
+    const monthlyRevenueRes = await sql.query`
+      SELECT 
+        MONTH(h.NgayLap) as month,
+        YEAR(h.NgayLap) as year,
+        SUM(ct.SoLuong * ct.DonGia) as revenue
+      FROM ChiTietHoaDon ct
+      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
+      WHERE h.TrangThai = N'Đã xác nhận'
+      AND h.NgayLap >= DATEADD(month, -6, GETDATE())
+      GROUP BY MONTH(h.NgayLap), YEAR(h.NgayLap)
+      ORDER BY YEAR(h.NgayLap) DESC, MONTH(h.NgayLap) DESC
+    `;
+
+    res.json({
+      totalRevenue: revenueRes.recordset[0].TotalRevenue || 0,
+      products: counts.recordset[0].products,
+      categories: counts.recordset[0].categories,
+      users: counts.recordset[0].users,
+      monthly: monthlyRevenueRes.recordset
+    });
+  } catch (err) {
+    console.error('❌ Lỗi stats:', err.message);
+    res.status(500).send('Lỗi khi lấy thống kê');
   } finally {
     sql.close();
   }
