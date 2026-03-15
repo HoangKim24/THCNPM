@@ -1,22 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --primary-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    --secondary-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-    --bg-color: #f8fafc;
-    --text-color: #0f172a;
+    --primary-color: #27ae60;
+    --primary-hover: #219150;
+    --secondary-color: #e67e22;
+    --bg-color: #f8fafb;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
     --text-muted: #64748b;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --green-color: #3cb815;
-    --light-green-color: #c0eb7b;
-    --orange-color: #ff7e00;
-    --light-orange-color: #f75f1d;
+    --green-color: #27ae60;
+    --light-green: #eafaf1;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --radius-sm: 8px;
 }
 
 * {

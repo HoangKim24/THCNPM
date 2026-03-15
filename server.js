@@ -155,6 +155,37 @@ app.delete('/api/sanpham/:id', async (req, res) => {
   }
 });
 
+// 🛒 Cập nhật sản phẩm (có upload ảnh)
+app.put('/api/sanpham/:id', upload.single('HinhAnh'), async (req, res) => {
+  const maSanPham = req.params.id;
+  const { TenSanPham, DonGia, DonViTinh, MaDanhMuc } = req.body;
+  const hinhAnh = req.file ? req.file.filename : null;
+  
+  try {
+    await sql.connect(dbConfig);
+    if (hinhAnh) {
+      await sql.query`
+        UPDATE SanPham 
+        SET TenSanPham = ${TenSanPham}, DonGia = ${DonGia}, DonViTinh = ${DonViTinh}, MaDanhMuc = ${MaDanhMuc}, HinhAnh = ${hinhAnh}
+        WHERE MaSanPham = ${maSanPham}
+      `;
+    } else {
+      await sql.query`
+        UPDATE SanPham 
+        SET TenSanPham = ${TenSanPham}, DonGia = ${DonGia}, DonViTinh = ${DonViTinh}, MaDanhMuc = ${MaDanhMuc}
+        WHERE MaSanPham = ${maSanPham}
+      `;
+    }
+    res.json({ message: '✅ Đã cập nhật sản phẩm thành công!' });
+  } catch (err) {
+    console.error('❌ Lỗi cập nhật sản phẩm:', err.message);
+    res.status(500).send('Lỗi khi cập nhật sản phẩm');
+  } finally {
+    sql.close();
+  }
+});
+
+
 // 📦 Lấy danh sách sản phẩm
 app.get('/api/sanpham', async (req, res) => {
   try {
@@ -231,51 +262,7 @@ app.get('/api/hoadon/:id', async (req, res) => {
   }
 });
 
-// 📊 API Thống kê (Mới)
-app.get('/api/stats', async (req, res) => {
-  try {
-    await sql.connect(dbConfig);
-    
-    // Đếm sản phẩm
-    const countSP = await sql.query('SELECT COUNT(*) as count FROM SanPham');
-    // Đếm danh mục
-    const countDM = await sql.query('SELECT COUNT(*) as count FROM DanhMuc');
-    // Doanh thu (các hóa đơn đã xác nhận)
-    const revenue = await sql.query(`
-      SELECT SUM(ct.SoLuong * ct.DonGia) as totalRevenue
-      FROM ChiTietHoaDon ct
-      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
-      WHERE h.TrangThai = N'Đã xác nhận'
-    `);
-    
-    // Doanh thu theo tháng (12 tháng gần nhất)
-    const monthlyRevenue = await sql.query(`
-      SELECT 
-        MONTH(h.NgayLap) as month, 
-        YEAR(h.NgayLap) as year, 
-        SUM(ct.SoLuong * ct.DonGia) as revenue
-      FROM ChiTietHoaDon ct
-      JOIN HoaDon h ON ct.MaHoaDon = h.MaHoaDon
-      WHERE h.TrangThai = N'Đã xác nhận'
-        AND h.NgayLap >= DATEADD(month, -12, GETDATE())
-      GROUP BY YEAR(h.NgayLap), MONTH(h.NgayLap)
-      ORDER BY year DESC, month DESC
-    `);
 
-    res.json({
-      products: countSP.recordset[0].count,
-      categories: countDM.recordset[0].count,
-      totalRevenue: revenue.recordset[0].totalRevenue || 0,
-      monthly: monthlyRevenue.recordset,
-      users: 2 // Hardcoded for now until DB Users is implemented
-    });
-  } catch (err) {
-    console.error('❌ Lỗi thống kê:', err.message);
-    res.status(500).json({ error: 'Lỗi khi lấy thống kê' });
-  } finally {
-    sql.close();
-  }
-});
 // 📦 Lấy danh sách danh mục
 app.get('/api/danhmuc', async (req, res) => {
   try {
@@ -323,6 +310,44 @@ app.post('/api/danhmuc', uploadDanhMuc.single('HinhAnh'), async (req, res) => {
     sql.close();
   }
 });
+
+// 🔄 Cập nhật danh mục
+app.put('/api/danhmuc/:id', uploadDanhMuc.single('HinhAnh'), async (req, res) => {
+  const maDanhMuc = req.params.id;
+  const { TenDanhMuc } = req.body;
+  const hinhAnh = req.file ? req.file.filename : null;
+  
+  try {
+    await sql.connect(dbConfig);
+    if (hinhAnh) {
+      await sql.query`UPDATE DanhMuc SET TenDanhMuc = ${TenDanhMuc}, HinhAnh = ${hinhAnh} WHERE MaDanhMuc = ${maDanhMuc}`;
+    } else {
+      await sql.query`UPDATE DanhMuc SET TenDanhMuc = ${TenDanhMuc} WHERE MaDanhMuc = ${maDanhMuc}`;
+    }
+    res.json({ message: '✅ Đã cập nhật danh mục!' });
+  } catch (err) {
+    console.error('❌ Lỗi cập nhật danh mục:', err.message);
+    res.status(500).send('Lỗi khi cập nhật danh mục');
+  } finally {
+    sql.close();
+  }
+});
+
+// 🗑️ Xóa danh mục
+app.delete('/api/danhmuc/:id', async (req, res) => {
+  const maDanhMuc = req.params.id;
+  try {
+    await sql.connect(dbConfig);
+    await sql.query`DELETE FROM DanhMuc WHERE MaDanhMuc = ${maDanhMuc}`;
+    res.json({ message: '✅ Đã xóa danh mục!' });
+  } catch (err) {
+    console.error('❌ Lỗi khi xóa danh mục:', err.message);
+    res.status(500).send('Lỗi khi xóa danh mục');
+  } finally {
+    sql.close();
+  }
+});
+
 
 // 👥 API Quản lý người dùng (Admin)
 app.get('/api/admin/users', async (req, res) => {

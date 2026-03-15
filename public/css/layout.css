@@ -29,6 +29,7 @@ header.shadow {
     gap: 0.5rem;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -36,6 +37,7 @@ header.shadow {
     font-size: 2rem;
     background: var(--primary-gradient);
     -webkit-background-clip: initial;
+    background-clip: initial;
     -webkit-text-fill-color: initial;
     color: #43e97b;
 }
@@ -55,10 +57,15 @@ header.shadow {
     transition: all 0.2s ease;
 }
 
-.navbar a:hover,
+.navbar a:hover {
+    color: var(--primary-color);
+    background: var(--light-green);
+}
+
 .navbar .home-active {
-    color: var(--text-color);
-    background: rgba(0, 0, 0, 0.05);
+    color: white;
+    background: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);
 }
 
 .profile {

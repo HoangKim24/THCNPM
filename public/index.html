@@ -29,15 +29,15 @@
       <a href="invoices.html" class="nav-link"><i class="bx bx-receipt"></i> Hóa đơn</a>
     </nav>
     <div class="profile">
-      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
+      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
       <span>Khách</span>
     </div>
   </header>
 
   <section class="hero-home">
     <div class="hero-bg">
-      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="">
-      <div class="hero-overlay"></div>
+      <img src="images/hero-banner.png" alt="Fresh Fruits">
+      <div class="hero-overlay" style="background: rgba(0,0,0,0.4);"></div>
     </div>
     <div class="hero-content">
       <p class="hero-badge">Trái cây & Rau củ tươi mỗi ngày</p>
@@ -114,7 +114,7 @@
   <script src="user.js"></script>
   <script>
     (function() {
-      const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+      const DEFAULT_IMG = 'images/placeholder-product.png';
 
       fetch('/api/danhmuc')
         .then(r => r.json())

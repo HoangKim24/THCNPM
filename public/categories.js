@@ -7,7 +7,7 @@ fetch('/api/danhmuc')
     data.forEach(dm => {
       list.innerHTML += `
         <div class="category-box">
-          <img src="images/${dm.HinhAnh ? dm.HinhAnh : 'default-category.jpg'}" alt="${dm.TenDanhMuc}" class="category-img">
+          <img src="images/${dm.HinhAnh ? dm.HinhAnh : 'placeholder-category.png'}" alt="${dm.TenDanhMuc}" class="category-img">
           <div class="category-info">
             <h3>${dm.TenDanhMuc}</h3>
           </div>

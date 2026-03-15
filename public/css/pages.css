@@ -92,6 +92,11 @@
 .hero-heading {
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.hero-badge, .hero-desc {
+  text-shadow: 0 1px 5px rgba(0,0,0,0.3);
 }
 /* Filter Bar */
 .filter-bar {

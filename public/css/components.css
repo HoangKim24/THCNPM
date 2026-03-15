@@ -18,24 +18,42 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  background-color: #27ae60;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
   text-decoration: none;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
 }
 
 .btn:hover {
-  background-color: #219150;
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
 }
 
-.btn i {
-  margin-left: 8px;
-  font-size: 1.2rem;
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--primary-color);
+  color: var(--primary-color);
+  box-shadow: none;
+}
+
+.btn-outline:hover {
+  background: var(--light-green);
+  color: var(--primary-hover);
+  box-shadow: none;
 }
 
 /* Category Boxes */
@@ -85,13 +103,30 @@
 .product-box {
   display: flex;
   flex-direction: column;
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: var(--radius);
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
-  min-height: 400px;
+}
+
+.product-box:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.product-box-link {
+  flex-grow: 1;
+  display: block;
+}
+
+.product-box .add-to-cart {
+  margin-top: auto;
+  width: auto;
+  align-self: center;
+  min-width: 140px;
 }
 
 .product-box img {

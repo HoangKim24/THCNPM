@@ -1,5 +1,4 @@
-// Ảnh mặc định khi sản phẩm không có ảnh
-const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+const DEFAULT_IMG = 'images/placeholder-product.png';
 
 function getDanhMucFromUrl() {
   const p = new URLSearchParams(window.location.search);
