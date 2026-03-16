@@ -1,159 +1,88 @@
-# Hệ Thống Quản Lý Bán Hàng
+# ⚜️ Luxury Perfume Management System
 
-Ứng dụng web quản lý bán hàng với giao diện admin và khách hàng, sử dụng Node.js và SQL Server.
+> Một giải pháp quản lý bán hàng cao cấp dành riêng cho các cửa hàng nước hoa Luxury, tích hợp quản lý kho, doanh thu và trải nghiệm khách hàng tinh tế.
 
-## 📋 Tính Năng
+---
 
-### Phần Khách Hàng
-- 🏠 Trang chủ hiển thị sản phẩm
-- 🔍 Xem chi tiết sản phẩm
-- 📂 Duyệt sản phẩm theo danh mục
-- 🛒 Giỏ hàng
-- 💳 Thanh toán
-- 📄 Xem hóa đơn
+## ✨ Điểm Nổi Bật
 
-### Phần Quản Trị
-- 📊 Thống kê doanh thu
-- 🏷️ Quản lý danh mục sản phẩm
-- 📦 Quản lý sản phẩm (thêm, sửa, xóa)
-- 🖼️ Upload hình ảnh sản phẩm
-- 📝 Quản lý hóa đơn
+- **Giao diện Sang trọng**: Tối ưu hóa trải nghiệm người dùng với phong cách hiện đại.
+- **Quản lý Vouchers**: Hệ thống mã giảm giá linh hoạt cho khách hàng VIP.
+- **Thống kê Thời gian thực**: Theo dõi doanh thu, sản phẩm bán chạy qua biểu đồ trực quan.
+- **Hệ thống Đa tầng**: Phân quyền rõ ràng giữa Khách hàng và Quản trị viên.
+
+## 📋 Tính Năng Chính
+
+### 💎 Trải Nghiệm Khách Hàng
+- [x] **Trang chủ**: Hiển thị bộ sưu tập nước hoa mới nhất.
+- [x] **Chi tiết sản phẩm**: Thông tin chi tiết về tầng hương, nồng độ và câu chuyện thương hiệu.
+- [x] **Giỏ hàng & Thanh toán**: Quy trình mua hàng nhanh chóng, hỗ trợ ghi chú địa chỉ.
+- [x] **Hóa đơn & Lịch sử**: Theo dõi đơn hàng đã mua dễ dàng.
+- [x] **Hồ sơ cá nhân**: Quản lý thông tin, đổi ảnh đại diện và mật khẩu.
+
+### 🛡️ Quản Trị Hệ Thống (Admin Panel)
+- [x] **Dashboard Dashboard**: Thống kê tổng doanh thu, số lượng đơn hàng và người dùng.
+- [x] **Quản lý Sản phẩm**: Thêm/Sửa/Xóa sản phẩm với tính năng upload hình ảnh tự động.
+- [x] **Quản lý Danh mục**: Phân loại nước hoa theo thương hiệu hoặc loại (EDP, EDT...).
+- [x] **Xử lý Đơn hàng**: Xem chi tiết và cập nhật trạng thái đơn hàng (Chờ xử lý/Đã xác nhận).
+- [x] **Hệ thống Voucher**: Tạo và quản lý các chương trình khuyến mãi.
+- [x] **Quản lý Người dùng**: Kiểm soát trạng thái hoạt động của tài khoản khách hàng.
 
 ## 🛠️ Công Nghệ Sử Dụng
 
-- **Backend**: Node.js, Express.js
-- **Database**: Microsoft SQL Server (MSSQL)
-- **Frontend**: HTML, CSS, JavaScript
-- **Upload**: Multer
+| Thành phần | Công nghệ |
+| :--- | :--- |
+| **Backend** | Node.js, Express.js |
+| **Database** | Microsoft SQL Server (MSSQL) |
+| **Frontend** | HTML5, CSS3 (Vanilla), JavaScript (ES6+) |
+| **Tiện ích** | Multer (Upload), Dotenv (Config), Openurl |
 
-## 📦 Cài Đặt
+## 🚀 Hướng Dẫn Cài Đặt
 
-### Yêu Cầu
-- Node.js (v14 trở lên)
-- SQL Server
-- npm hoặc yarn
+### 1. Yêu Cầu Hệ Thống
+- Node.js v16.x trở lên.
+- Microsoft SQL Server.
 
-### Các Bước Cài Đặt
-
-1. **Clone repository**
+### 2. Cài Đặt Dự Án
 ```bash
+# Clone repository
 git clone <repository-url>
-cd THCNPM-main
-```
 
-2. **Cài đặt dependencies**
-```bash
+# Di chuyển vào thư mục
+cd THCNPM-main
+
+# Cài đặt thư viện
 npm install
 ```
 
-3. **Cấu hình Database**
-
-Mở file `server.js` và cập nhật thông tin kết nối database:
-
-```javascript
-const dbConfig = {
-  server: 'YOUR_SERVER_NAME',
-  database: 'CoopmartDB',
-  options: { 
-    encrypt: false, 
-    trustServerCertificate: true
-  },
-  authentication: {
-    type: 'ntlm',
-    options: {
-      domain: '',
-      userName: 'YOUR_USERNAME',
-      password: 'YOUR_PASSWORD'
-    }
-  }
-};
+### 3. Cấu Hình Biến Môi Trường
+Tạo tệp `.env` tại thư mục gốc và cấu hình như sau:
+```env
+PORT=3000
+DB_SERVER=localhost
+DB_NAME=CoopmartDB
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_TRUST_CERT=true
+DB_ENCRYPT=false
 ```
 
-4. **Tạo Database**
-
-Chạy script SQL để tạo database `CoopmartDB` với các bảng:
-- DanhMuc
-- SanPham
-- HoaDon
-- ChiTietHoaDon
-
-5. **Chạy ứng dụng**
+### 4. Khởi Chạy
 ```bash
 npm start
 ```
+Truy cập: `http://localhost:3000`
 
-Ứng dụng sẽ chạy tại `http://localhost:3000`
+## 📂 Cấu Trúc Thư Mục
+- `/admin`: Chứa giao diện và logic của trang quản trị.
+- `/public`: Chứa giao diện khách hàng, CSS, và hình ảnh sản phẩm.
+- `server.js`: API Server chính xử lý logic nghiệp vụ.
+- `*.js (root)`: Các script hỗ trợ khởi tạo và kiểm tra database.
 
-## 👥 Tài Khoản Demo
-
-### Admin
-- Username: `admin`
-- Password: `admin123`
-
-### User
-- Username: `chuong`
-- Password: `user123`
-
-## 📁 Cấu Trúc Thư Mục
-
-```
-THCNPM-main/
-├── admin/              # Giao diện quản trị
-│   ├── admin.html      # Trang chủ admin
-│   ├── danhmuc.html    # Quản lý danh mục
-│   ├── sanpham.html    # Quản lý sản phẩm
-│   ├── hoadon.html     # Quản lý hóa đơn
-│   └── *.js            # Scripts riêng
-├── public/             # Giao diện khách hàng
-│   ├── index.html      # Trang chủ
-│   ├── products.html   # Danh sách sản phẩm
-│   ├── cart.html       # Giỏ hàng
-│   ├── checkout.html   # Thanh toán
-│   ├── images/         # Thư mục chứa hình ảnh
-│   └── *.js            # Scripts riêng
-├── server.js           # Server chính
-├── test-db.js          # Test kết nối database
-└── package.json        # Dependencies
-```
-
-## 🔌 API Endpoints
-
-### Sản Phẩm
-- `GET /api/sanpham` - Lấy danh sách sản phẩm
-- `POST /api/sanpham` - Thêm sản phẩm mới
-- `PUT /api/sanpham/:id` - Cập nhật sản phẩm
-- `DELETE /api/sanpham/:id` - Xóa sản phẩm
-
-### Danh Mục
-- `GET /api/danhmuc` - Lấy danh sách danh mục
-- `POST /api/danhmuc` - Thêm danh mục mới
-- `PUT /api/danhmuc/:id` - Cập nhật danh mục
-- `DELETE /api/danhmuc/:id` - Xóa danh mục
-
-### Hóa Đơn
-- `GET /api/hoadon` - Lấy danh sách hóa đơn
-- `POST /api/hoadon` - Tạo hóa đơn mới
-- `DELETE /api/hoadon/:id` - Xóa hóa đơn
-
-### Xác Thực
-- `POST /login` - Đăng nhập
-
-## 🚀 Sử Dụng
-
-1. Truy cập `http://localhost:3000` để vào trang khách hàng
-2. Truy cập `http://localhost:3000/login.html` để đăng nhập
-3. Đăng nhập với tài khoản admin để vào trang quản trị
-
-## 📝 Ghi Chú
-
-- Hình ảnh sản phẩm được lưu trong thư mục `public/images/`
-- Sử dụng NTLM authentication cho SQL Server
-- Cần cấu hình SQL Server cho phép kết nối TCP/IP
-
-## 📄 License
-
-ISC
+---
 
 ## 👨‍💻 Tác Giả
+Dự án được phát triển bởi **Hoàng Kim** & Team THCNPM.
 
-THCNPM Team
+> [!TIP]
+> Để bảo mật tốt nhất, hãy đảm bảo bạn không chia sẻ tệp `.env` chứa mật khẩu database lên các kho lưu trữ công khai.

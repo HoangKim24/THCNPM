@@ -77,16 +77,17 @@ function renderProducts() {
     const imgSrc = sp.HinhAnh ? 'images/' + sp.HinhAnh : DEFAULT_IMG;
     const price = typeof sp.DonGia === 'number' ? sp.DonGia : parseFloat(sp.DonGia) || 0;
     list.innerHTML += `
-      <div class="product-box">
-        <a href="product-detail.html?id=${sp.MaSanPham}" class="product-box-link">
-          <img src="${imgSrc}" alt="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" onerror="this.src='${DEFAULT_IMG}'">
-          <div class="product-info">
+      <div class="product-card">
+        <a href="product-detail.html?id=${sp.MaSanPham}" class="product-card-link">
+          <div class="product-card-img">
+            <img src="${imgSrc}" alt="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" onerror="this.src='${DEFAULT_IMG}'">
+          </div>
+          <div class="product-card-info">
             <h3>${(sp.TenSanPham || '').replace(/</g, '&lt;')}</h3>
-            <p class="weight">${(sp.DonViTinh || '').replace(/</g, '&lt;')}</p>
-            <p class="price">${price.toLocaleString('vi-VN')}₫</p>
+            <p class="product-card-price">${price.toLocaleString('vi-VN')}₫</p>
           </div>
         </a>
-        <button class="btn add-to-cart" data-id="${sp.MaSanPham}" data-name="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" data-price="${price}">
+        <button class="btn btn-add-to-cart add-to-cart" data-id="${sp.MaSanPham}" data-name="${(sp.TenSanPham || '').replace(/"/g, '&quot;')}" data-price="${price}">
           Thêm vào giỏ <i class='bx bx-cart-alt'></i>
         </button>
       </div>

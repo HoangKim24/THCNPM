@@ -1,8 +1,3 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/index.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -20,94 +15,199 @@
 </head>
 <body class="home-page">
   <header class="main-header">
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
-    <nav class="main-nav">
-      <a href="index.html" class="nav-link active">Trang chủ</a>
-      <a href="categories.html" class="nav-link">Danh mục</a>
-      <a href="products.html" class="nav-link">Sản phẩm</a>
-      <a href="cart.html" class="nav-link nav-cart"><i class="bx bx-cart"></i> Giỏ hàng</a>
-      <a href="invoices.html" class="nav-link"><i class="bx bx-receipt"></i> Hóa đơn</a>
-    </nav>
-    <div class="profile">
-      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
-      <span>Khách</span>
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <input type="text" placeholder="Gõ tên trái cây, rau củ để tìm..." id="searchInput">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+          <div class="search-suggestions hidden">
+             <!-- suggestions will appear here -->
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="action-item location-picker">
+            <i class='bx bx-map'></i>
+            <span>Giao đến<br><b>Chọn địa chỉ</b></span>
+          </div>
+          
+          <div class="action-item profile">
+            <i class='bx bx-user-circle'></i>
+            <span>Tài khoản<br><b>Đăng nhập</b></span>
+          </div>
+          
+          <a href="cart.html" class="action-item header-cart">
+            <div class="cart-icon">
+              <i class='bx bx-cart'></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <span>Giỏ hàng<br><b id="headerCartTotal">0đ</b></span>
+          </a>
+        </div>
+      </div>
     </div>
+    
+    <!-- Navigation Mega Menu -->
+    <nav class="main-nav-bottom">
+      <div class="container nav-container">
+        <ul class="mega-menu">
+          <li class="menu-item-has-children">
+            <a href="categories.html" class="menu-category-btn"><i class='bx bx-menu'></i> Danh mục sản phẩm</a>
+            <div class="mega-dropdown">
+               <div class="mega-column">
+                 <h4>Thực phẩm tươi sống</h4>
+                 <a href="products.html">Rau ăn lá</a>
+                 <a href="products.html">Củ quả tươi</a>
+                 <a href="products.html">Trái cây nội địa</a>
+                 <a href="products.html">Trái cây nhập khẩu</a>
+               </div>
+               <div class="mega-column">
+                 <h4>Thịt & Thủy hải sản</h4>
+                 <a href="products.html">Thịt heo, bò, gà</a>
+                 <a href="products.html">Cá & Hải sản tươi</a>
+               </div>
+            </div>
+          </li>
+          <li><a href="index.html" class="nav-link active">Trang chủ</a></li>
+          <li><a href="products.html" class="nav-link">Sản phẩm khuyến mãi <span class="hot-badge">HOT</span></a></li>
+          <li><a href="products.html" class="nav-link">Combo tiết kiệm</a></li>
+          <li><a href="invoices.html" class="nav-link">Tra cứu đơn hàng</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
-  <section class="hero-home">
-    <div class="hero-bg">
-      <img src="images/hero-banner.png" alt="Fresh Fruits">
-      <div class="hero-overlay" style="background: rgba(0,0,0,0.4);"></div>
-    </div>
-    <div class="hero-content">
-      <p class="hero-badge">Trái cây & Rau củ tươi mỗi ngày</p>
-      <h1 class="hero-heading">Chọn món ngon –<br>Ăn lành mạnh</h1>
-      <p class="hero-desc">Giao tận nơi, chất lượng đảm bảo. Mua sắm dễ dàng với giá tốt nhất.</p>
-      <div class="hero-cta">
-        <a href="products.html" class="btn btn-primary"><i class="bx bx-shopping-bag"></i> Mua sắm ngay</a>
-        <a href="categories.html" class="btn btn-secondary">Xem danh mục</a>
+  <!-- Hero Banner Slider -->
+  <section class="hero-slider">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <span class="hero-badge">Siêu Khuyến Mãi Cuối Tuần</span>
+        <h1 class="hero-heading">Thực Phẩm Tươi Sống<br><span>Giá Sốc 50%</span></h1>
+        <p class="hero-desc">Bữa ăn sạch từ nông trại đến bàn ăn. Đặt hàng ngay giao nhanh trong 2H.</p>
+        <div class="hero-cta">
+          <a href="products.html" class="btn btn-primary"><i class="bx bx-shopping-bag"></i> Mua sắm ngay</a>
+        </div>
+      </div>
+      <div class="hero-image-wrap">
+        <img src="images/hero-banner.png" alt="Rau củ quả tươi">
+        <div class="floating-badge badge-1"><i class='bx bx-check-shield'></i> VietGAP</div>
+        <div class="floating-badge badge-2"><i class='bx bx-timer'></i> Giao 2H</div>
       </div>
     </div>
   </section>
 
-  <section class="section section-categories">
+  <!-- Category Icons List -->
+  <section class="home-categories-section">
     <div class="container">
-      <div class="section-head">
-        <h2>Danh mục sản phẩm</h2>
-        <p>Chọn loại bạn cần</p>
+      <div class="section-header">
+        <h2>Khám phá danh mục</h2>
       </div>
-      <div id="home-categories" class="categories-grid">
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
-        <div class="skeleton-card"></div>
+      <!-- Render by JS -->
+      <div id="home-categories" class="category-icon-grid">
+         <!-- Loading skeletons -->
+         <div class="skeleton-circle"></div>
+         <div class="skeleton-circle"></div>
+         <div class="skeleton-circle"></div>
+         <div class="skeleton-circle"></div>
+         <div class="skeleton-circle"></div>
+         <div class="skeleton-circle"></div>
       </div>
     </div>
   </section>
 
-  <section class="section section-products">
+  <!-- Flash Sale Section -->
+  <section class="flash-sale-section">
     <div class="container">
-      <div class="section-head">
-        <h2>Sản phẩm nổi bật</h2>
-        <p>Gợi ý cho bạn</p>
+      <div class="flash-sale-header">
+        <div class="fs-title">
+          <h2><i class='bx bxs-zap' style="color:#f1c40f"></i> Giá Sốc Cuối Tuần</h2>
+          <div class="countdown-timer">
+            Kết thúc trong: <span class="time-box">02</span> : <span class="time-box">45</span> : <span class="time-box">12</span>
+          </div>
+        </div>
+        <a href="products.html" class="view-all-fs">Xem tất cả <i class="bx bx-chevron-right"></i></a>
+      </div>
+      
+      <!-- Products generated by JS -->
+      <div id="flash-sale-products" class="products-grid fs-grid">
+         <!-- Load from API sanpham then filter -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Suggested Products -->
+  <section class="suggested-products">
+    <div class="container">
+      <div class="section-header">
+        <h2><i class='bx bxs-heart-circle' style="color:var(--primary-color)"></i> Gợi ý cho bạn</h2>
+        <p>Hàng ngàn sản phẩm tươi sạch mỗi ngày</p>
       </div>
       <div id="home-products" class="products-grid">
+        <!-- Render from JS -->
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
       </div>
-      <div class="section-cta">
-        <a href="products.html" class="btn btn-outline">Xem tất cả sản phẩm <i class="bx bx-right-arrow-alt"></i></a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-cta-block">
-    <div class="container">
-      <div class="cta-block">
-        <h2>Sẵn sàng mua sắm?</h2>
-        <p>Hàng nghìn sản phẩm tươi sạch đang chờ bạn.</p>
-        <a href="products.html" class="btn btn-white"><i class="bx bx-cart"></i> Đến trang sản phẩm</a>
+      <div class="section-cta-center">
+        <a href="products.html" class="btn btn-outline" style="margin-top:20px;">Xem thêm sản phẩm</a>
       </div>
     </div>
   </section>
 
   <footer class="main-footer">
     <div class="container">
-      <div class="footer-inner">
+      <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
-          <p>Trái cây & rau củ tươi – Chất lượng, giá tốt.</p>
+          <a href="index.html" class="logo">
+            <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+          </a>
+          <p>Hệ thống bán lẻ thực phẩm sạch, trái cây & rau củ quả tươi ngon mỗi ngày. Mang đến bữa ăn chất lượng cho gia đình bạn.</p>
+          <div class="social-links">
+            <a href="#"><i class='bx bxl-facebook-circle'></i></a>
+            <a href="#"><i class='bx bxl-instagram-alt'></i></a>
+            <a href="#"><i class='bx bxl-youtube'></i></a>
+          </div>
         </div>
-        <div class="footer-links">
-          <a href="products.html">Sản phẩm</a>
-          <a href="categories.html">Danh mục</a>
-          <a href="cart.html">Giỏ hàng</a>
-          <a href="invoices.html">Hóa đơn</a>
+        
+        <div class="footer-col">
+          <h3>Về Chúng Tôi</h3>
+          <a href="#">Giới thiệu Siêu Thị Xanh</a>
+          <a href="#">Hệ thống cửa hàng</a>
+          <a href="#">Tuyển dụng</a>
+          <a href="#">Liên hệ</a>
+        </div>
+
+        <div class="footer-col">
+          <h3>Hỗ Trợ Khách Hàng</h3>
+          <a href="#">Chính sách giao hàng</a>
+          <a href="#">Chính sách đổi trả</a>
+          <a href="#">Hướng dẫn mua hàng</a>
+          <a href="#">Chính sách bảo mật</a>
+        </div>
+
+        <div class="footer-col">
+          <h3>Tải Ứng Dụng</h3>
+          <p>Tải ứng dụng để nhận thêm nhiều ưu đãi độc quyền.</p>
+          <div class="app-downloads">
+             <div class="app-btn"><i class='bx bxl-apple'></i> App Store</div>
+             <div class="app-btn"><i class='bx bxl-play-store'></i> Google Play</div>
+          </div>
+          <div class="certifications">
+            <img src="https://images.dmca.com/Badges/dmca_protected_sml_120n.png?ID=0123" alt="DMCA.com Protection Status">
+          </div>
         </div>
       </div>
-      <p class="footer-copy">© Siêu Thị 4 anh em. Dự án THCNPM.</p>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2026 Siêu Thị Xanh. All rights reserved. Đồ án THCNPM.</p>
+      </div>
     </div>
   </footer>
 
@@ -124,9 +224,9 @@
           el.innerHTML = (data.slice(0, 6) || []).map(dm => {
             const img = dm.HinhAnh ? 'images/' + dm.HinhAnh : DEFAULT_IMG;
             return `
-              <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="category-card">
-                <div class="category-card-img"><img src="${img}" alt="${(dm.TenDanhMuc||'').replace(/"/g,'&quot;')}" onerror="this.src='${DEFAULT_IMG}'"></div>
-                <span class="category-card-name">${(dm.TenDanhMuc||'Danh mục').replace(/</g,'&lt;')}</span>
+              <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="cat-item">
+                <div class="cat-item-img"><img src="${img}" alt="${(dm.TenDanhMuc||'').replace(/"/g,'&quot;')}" onerror="this.src='${DEFAULT_IMG}'"></div>
+                <span>${(dm.TenDanhMuc||'Danh mục').replace(/</g,'&lt;')}</span>
               </a>
             `;
           }).join('');
@@ -150,10 +250,12 @@
               <div class="product-card">
                 <a href="product-detail.html?id=${sp.MaSanPham}" class="product-card-link">
                   <div class="product-card-img"><img src="${img}" alt="${name}" onerror="this.src='${DEFAULT_IMG}'"></div>
-                  <h3>${name}</h3>
-                  <p class="product-card-price">${price.toLocaleString('vi-VN')}₫</p>
+                  <div class="product-card-info">
+                    <h3>${name}</h3>
+                    <p class="product-card-price">${price.toLocaleString('vi-VN')}₫</p>
+                  </div>
                 </a>
-                <button type="button" class="btn btn-sm add-to-cart-home" data-id="${sp.MaSanPham}" data-name="${sp.TenSanPham}" data-price="${price}"><i class="bx bx-cart-add"></i> Thêm vào giỏ</button>
+                <button type="button" class="btn btn-sm btn-add-to-cart add-to-cart-home" data-id="${sp.MaSanPham}" data-name="${sp.TenSanPham}" data-price="${price}"><i class="bx bx-cart-add"></i> Thêm vào giỏ</button>
               </div>
             `;
           }).join('');

@@ -1,8 +1,3 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/cart.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -16,36 +11,107 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <body>
-  <header>
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
-    <ul class="navbar">
-      <li><a href="index.html">Trang chủ</a></li>
-      <li><a href="categories.html">Danh mục</a></li>
-      <li><a href="products.html">Sản phẩm</a></li>
-      <li><a href="cart.html" class="home-active"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
-      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn</a></li>
-    </ul>
-    <div class="profile">
-      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
-      <span>Khách</span>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <input type="text" placeholder="Gõ tên trái cây, rau củ để tìm..." id="searchInputGlobal">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="action-item location-picker">
+            <i class='bx bx-map'></i>
+            <span>Giao đến<br><b>Chọn địa chỉ</b></span>
+          </div>
+          
+          <div class="action-item profile">
+            <i class='bx bx-user-circle'></i>
+            <span>Tài khoản<br><b>Đăng nhập</b></span>
+          </div>
+          
+          <a href="cart.html" class="action-item header-cart">
+            <div class="cart-icon">
+              <i class='bx bx-cart'></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <span>Giỏ hàng<br><b id="headerCartTotal">0đ</b></span>
+          </a>
+        </div>
+      </div>
     </div>
+    
+    <!-- Navigation Mega Menu -->
+    <nav class="main-nav-bottom">
+      <div class="container nav-container">
+        <ul class="mega-menu">
+          <li class="menu-item-has-children">
+            <a href="categories.html" class="menu-category-btn"><i class='bx bx-menu'></i> Danh mục sản phẩm</a>
+          </li>
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="products.html" class="nav-link">Sản phẩm <span class="hot-badge">HOT</span></a></li>
+          <li><a href="products.html" class="nav-link">Combo tiết kiệm</a></li>
+          <li><a href="invoices.html" class="nav-link">Tra cứu đơn hàng</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
   <main class="cart-page">
     <div class="cart-page-inner">
-      <h1 class="cart-page-title"><i class="bx bx-cart"></i> Giỏ hàng của bạn</h1>
-      <div id="cart-list" class="cart-list"></div>
-      <div id="cart-summary" class="cart-summary"></div>
-      <div class="cart-actions">
-        <a href="products.html" class="btn btn-outline"><i class="bx bx-shopping-bag"></i> Tiếp tục mua sắm</a>
-        <a href="checkout.html" id="cart-checkout-btn" class="btn btn-primary"><i class="bx bx-credit-card"></i> Thanh toán</a>
+      <div class="cart-layout">
+        <!-- List Items -->
+        <div class="cart-items-section">
+          <h1 class="cart-page-title">Giỏ hàng của bạn</h1>
+          <div id="cart-list" class="cart-list-container"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="cart-summary-section">
+          <div class="summary-card">
+             <h3>Tổng Đơn Hàng</h3>
+             <div class="summary-row">
+               <span>Tạm tính:</span>
+               <span id="cart-subtotal">0₫</span>
+             </div>
+             <div class="summary-row">
+               <span>Phí vận chuyển:</span>
+               <span>Khu vực hỗ trợ (0₫)</span>
+             </div>
+             <div class="summary-total">
+               <span>Tổng thanh toán:</span>
+               <strong id="cart-grand-total">0₫</strong>
+             </div>
+             <p class="summary-note">(Đã bao gồm VAT nếu có)</p>
+             <a href="checkout.html" id="cart-checkout-btn" class="btn btn-primary btn-checkout">
+               Tiến Hành Thanh Toán <i class="bx bx-right-arrow-alt"></i>
+             </a>
+             <a href="products.html" class="btn btn-outline btn-continue">Tiếp tục mua sắm</a>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none; text-align:center;">
+        <p class="footer-copy">© 2026 Siêu Thị Xanh. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
   <script src="user.js"></script>
   <script>
-    const DEFAULT_IMG = 'images/HinhAnh-1752415674712-693980431.jpg';
+    const DEFAULT_IMG = 'images/placeholder-product.png';
 
     function escapeHtml(s) {
       if (!s) return '';
@@ -55,26 +121,31 @@
     function renderCart() {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]');
       const cartList = document.getElementById('cart-list');
-      const cartSummary = document.getElementById('cart-summary');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const grandTotalEl = document.getElementById('cart-grand-total');
       const checkoutBtn = document.getElementById('cart-checkout-btn');
 
       if (cart.length === 0) {
         cartList.innerHTML = `
-          <div class="cart-empty">
-            <i class="bx bx-cart"></i>
-            <p>Giỏ hàng trống</p>
-            <a href="products.html" class="btn">Mua sắm ngay</a>
+          <div class="cart-empty" style="text-align: center; padding: 3rem 0;">
+            <i class="bx bx-cart" style="font-size: 5rem; color: #cbd5e1; margin-bottom: 20px;"></i>
+            <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 20px;">Chưa có sản phẩm nào trong giỏ hàng</p>
+            <a href="products.html" class="btn btn-primary">Khám phá sản phẩm</a>
           </div>
         `;
-        cartSummary.innerHTML = '';
-        if (checkoutBtn) checkoutBtn.style.opacity = '0.6';
+        if(subtotalEl) subtotalEl.textContent = '0₫';
+        if(grandTotalEl) grandTotalEl.textContent = '0₫';
+        if (checkoutBtn) {
+          checkoutBtn.style.pointerEvents = 'none';
+          checkoutBtn.style.opacity = '0.5';
+        }
         return;
       }
 
       fetch('/api/sanpham')
         .then(res => res.json())
         .then(products => {
-          let html = '<table class="cart-table"><thead><tr><th>Sản phẩm</th><th>Đơn giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr></thead><tbody>';
+          let html = '';
           let total = 0;
 
           cart.forEach(item => {
@@ -85,44 +156,51 @@
             const subtotal = price * qty;
             total += subtotal;
             const name = escapeHtml(item.name);
+            
             html += `
-              <tr class="cart-row" data-name="${name}">
-                <td class="cart-cell-product">
+              <div class="cart-item-card">
+                <div class="cart-item-img">
                   <img src="${imgSrc}" alt="" onerror="this.src='${DEFAULT_IMG}'">
-                  <span>${name}</span>
-                </td>
-                <td class="cart-cell-price">${price.toLocaleString('vi-VN')}₫</td>
-                <td class="cart-cell-qty">
-                  <button type="button" class="cart-qty-btn minus" data-name="${name}">−</button>
-                  <span class="cart-qty-num">${qty}</span>
-                  <button type="button" class="cart-qty-btn plus" data-name="${name}">+</button>
-                </td>
-                <td class="cart-cell-total">${subtotal.toLocaleString('vi-VN')}₫</td>
-                <td class="cart-cell-remove">
-                  <button type="button" class="cart-remove" data-name="${name}" title="Xóa"><i class="bx bx-trash"></i></button>
-                </td>
-              </tr>
+                </div>
+                <div class="cart-item-info">
+                  <h4>${name}</h4>
+                  <p class="item-price">${price.toLocaleString('vi-VN')}₫</p>
+                </div>
+                <div class="cart-item-qty">
+                  <div class="qty-selector inline">
+                    <button type="button" class="qty-btn minus" data-name="${name}"><i class='bx bx-minus'></i></button>
+                    <input type="number" value="${qty}" readonly>
+                    <button type="button" class="qty-btn plus" data-name="${name}"><i class='bx bx-plus'></i></button>
+                  </div>
+                </div>
+                <div class="cart-item-subtotal">
+                  ${subtotal.toLocaleString('vi-VN')}₫
+                </div>
+                <div class="cart-item-remove">
+                  <button type="button" class="cart-remove-btn" data-name="${name}" title="Xóa">
+                     <i class="bx bx-trash"></i>
+                  </button>
+                </div>
+              </div>
             `;
           });
 
-          html += '</tbody></table>';
           cartList.innerHTML = html;
-          cartSummary.innerHTML = `
-            <div class="cart-total-row">
-              <span>Tổng cộng:</span>
-              <strong id="cart-grand-total">${total.toLocaleString('vi-VN')}₫</strong>
-            </div>
-          `;
+          if(subtotalEl) subtotalEl.textContent = total.toLocaleString('vi-VN') + '₫';
+          if(grandTotalEl) grandTotalEl.textContent = total.toLocaleString('vi-VN') + '₫';
 
-          if (checkoutBtn) checkoutBtn.style.opacity = '1';
+          if (checkoutBtn) {
+            checkoutBtn.style.pointerEvents = 'auto';
+            checkoutBtn.style.opacity = '1';
+          }
 
-          document.querySelectorAll('.cart-qty-btn.plus').forEach(btn => {
+          document.querySelectorAll('.qty-btn.plus').forEach(btn => {
             btn.onclick = () => updateQty(btn.dataset.name, 1);
           });
-          document.querySelectorAll('.cart-qty-btn.minus').forEach(btn => {
+          document.querySelectorAll('.qty-btn.minus').forEach(btn => {
             btn.onclick = () => updateQty(btn.dataset.name, -1);
           });
-          document.querySelectorAll('.cart-remove').forEach(btn => {
+          document.querySelectorAll('.cart-remove-btn').forEach(btn => {
             btn.onclick = () => removeItem(btn.dataset.name);
           });
         })
@@ -139,6 +217,7 @@
       if (item.quantity <= 0) cart = cart.filter(i => i.name !== name);
       localStorage.setItem('cart', JSON.stringify(cart));
       renderCart();
+      if(window.updateHeaderCart) updateHeaderCart();
     }
 
     function removeItem(name) {

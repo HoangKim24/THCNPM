@@ -1,0 +1,74 @@
+/* Lớp ẩn modal */
+.hidden {
+  display: none !important;
+}
+
+/* Modal overlay toàn màn hình */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Nội dung modal */
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+
+.modal-content ul {
+  text-align: left;
+  margin-bottom: 16px;
+  padding-left: 20px;
+}
+
+.modal-content li {
+  margin: 6px 0;
+}
+
+#tongTien {
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.modal-content button {
+  margin: 5px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#xacNhanBtn {
+  background-color: #27ae60;
+  color: white;
+}
+
+.modal-content button:hover {
+  opacity: 0.9;
+}
+
+/* Hiệu ứng mở popup */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

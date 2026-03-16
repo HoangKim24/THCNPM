@@ -13,7 +13,85 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // --- Đặt các route API ở đây ---
-// (Toàn bộ các route API đã có sẵn bên dưới)
+// 📊 API Thống kê chi tiết
+app.get('/api/stats/top-products', async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query(`
+      SELECT TOP 5 sp.TenSanPham, SUM(ct.SoLuong) as TotalSold
+      FROM ChiTietHoaDon ct
+      JOIN SanPham sp ON ct.MaSanPham = sp.MaSanPham
+      GROUP BY sp.TenSanPham
+      ORDER BY TotalSold DESC
+    `);
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+// 🎟️ API Quản lý Voucher
+app.get('/api/vouchers', async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query('SELECT * FROM Vouchers ORDER BY MaVoucher DESC');
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+app.post('/api/vouchers', async (req, res) => {
+  const { code, giamGia, moTa, ngayHetHan } = req.body;
+  try {
+    await sql.connect(dbConfig);
+    await sql.query`
+      INSERT INTO Vouchers (Code, GiamGia, MoTa, NgayHetHan)
+      VALUES (${code}, ${giamGia}, ${moTa}, ${ngayHetHan})
+    `;
+    res.json({ message: '✅ Đã thêm voucher!' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+app.delete('/api/vouchers/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await sql.connect(dbConfig);
+    await sql.query`DELETE FROM Vouchers WHERE MaVoucher = ${id}`;
+    res.json({ message: '✅ Đã xóa voucher!' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+// 🔄 Cập nhật trạng thái hóa đơn linh hoạt
+app.put('/api/hoadon/:id/status', async (req, res) => {
+  const maHoaDon = req.params.id;
+  const { trangThai } = req.body;
+  try {
+    await sql.connect(dbConfig);
+    await sql.query`
+      UPDATE HoaDon 
+      SET TrangThai = ${trangThai} 
+      WHERE MaHoaDon = ${maHoaDon}
+    `;
+    res.json({ message: '✅ Cập nhật trạng thái thành công!' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
 
 // 📁 Static assets (Đặt SAU các route API)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -349,6 +427,68 @@ app.delete('/api/danhmuc/:id', async (req, res) => {
 });
 
 
+// 👥 API Cá nhân (User)
+app.get('/api/user/profile/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query`SELECT Username, FullName, Phone, Address, Avatar FROM NguoiDung WHERE Username = ${username}`;
+    if (result.recordset.length === 0) return res.status(404).send('Không tìm thấy user');
+    res.json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+app.put('/api/user/profile', upload.single('Avatar'), async (req, res) => {
+  const { username, fullName, phone, address } = req.body;
+  const avatar = req.file ? req.file.filename : null;
+  
+  try {
+    await sql.connect(dbConfig);
+    if (avatar) {
+      await sql.query`
+        UPDATE NguoiDung 
+        SET FullName = ${fullName}, Phone = ${phone}, Address = ${address}, Avatar = ${avatar}
+        WHERE Username = ${username}
+      `;
+    } else {
+      await sql.query`
+        UPDATE NguoiDung 
+        SET FullName = ${fullName}, Phone = ${phone}, Address = ${address}
+        WHERE Username = ${username}
+      `;
+    }
+    res.json({ message: 'Cập nhật thành công!' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
+app.post('/api/user/change-password', async (req, res) => {
+  const { username, oldPass, newPass } = req.body;
+  try {
+    await sql.connect(dbConfig);
+    
+    // Kiểm tra mật khẩu cũ
+    const check = await sql.query`SELECT Username FROM NguoiDung WHERE Username = ${username} AND Password = ${oldPass}`;
+    if (check.recordset.length === 0) {
+      return res.status(400).send('Mật khẩu hiện tại không đúng');
+    }
+
+    await sql.query`UPDATE NguoiDung SET Password = ${newPass} WHERE Username = ${username}`;
+    res.json({ message: 'Đổi mật khẩu thành công!' });
+  } catch (err) {
+    res.status(500).send(err.message);
+  } finally {
+    sql.close();
+  }
+});
+
 // 👥 API Quản lý người dùng (Admin)
 app.get('/api/admin/users', async (req, res) => {
   try {
@@ -434,20 +574,6 @@ app.get('/', (req, res) => {
 });
 
 // 🚀 Khởi chạy server
-// ✅ Xác nhận hóa đơn (đặt đúng vị trí sau khi khai báo app)
-app.post('/api/hoadon/:id/xacnhan', async (req, res) => {
-  const maHoaDon = req.params.id;
-  try {
-    await sql.connect(dbConfig);
-    await sql.query`UPDATE HoaDon SET TrangThai = N'Đã xác nhận' WHERE MaHoaDon = ${maHoaDon}`;
-    res.json({ message: 'Đã xác nhận đơn!' });
-  } catch (err) {
-    console.error('❌ Lỗi xác nhận hóa đơn:', err.message);
-    res.status(500).send('Lỗi xác nhận hóa đơn');
-  } finally {
-    sql.close();
-  }
-});
 
 app.listen(PORT, () => {
   console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);

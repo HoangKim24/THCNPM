@@ -17,9 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>${hd.NgayLap ? new Date(hd.NgayLap).toLocaleDateString() : ''}</td>
           <td>${hd.TenKhachHang || ''}</td>
           <td>${hd.SoDienThoai || hd.SDT || ''}</td>
-          <td>${hd.TrangThai || ''}</td>
+          <td>
+            <span class="status-badge" style="padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background: ${getStatusColor(hd.TrangThai)}; color: #fff;">
+              ${hd.TrangThai || 'Chờ xác nhận'}
+            </span>
+          </td>
           <td><button class="xemBtn" data-id="${hd.MaHoaDon}">👁️ Xem</button></td>
-          <td><button class="xoaBtn" data-id="${hd.MaHoaDon}" style="color:#e74c3c;background:#fff;border:1px solid #e74c3c;border-radius:4px;padding:2px 8px;cursor:pointer;">Xóa</button></td>
+          <td><button class="xoaBtn" data-id="${hd.MaHoaDon}" style="color:#e74c3c;background:#fdf2f2;border:none;border-radius:4px;padding:6px 12px;cursor:pointer;">Xóa</button></td>
         `;
         row.querySelector('.xemBtn').addEventListener('click', () => xemChiTiet(hd.MaHoaDon));
         row.querySelector('.xoaBtn').addEventListener('click', () => xoaHoaDon(hd.MaHoaDon));
@@ -53,9 +57,60 @@ document.addEventListener('DOMContentLoaded', () => {
           total += sp.SoLuong * sp.DonGia;
         });
         tong.textContent = `Tổng tiền: ${total.toLocaleString()}₫`;
-        btnXacNhan.onclick = () => xacNhan(maHD);
+        
+        // Cập nhật footer modal để chọn trạng thái
+        const modalFooter = document.querySelector('.modal-footer') || document.createElement('div');
+        modalFooter.className = 'modal-footer';
+        modalFooter.style.marginTop = '20px';
+        modalFooter.style.display = 'flex';
+        modalFooter.style.gap = '10px';
+        modalFooter.style.justifyContent = 'flex-end';
+        
+        modalFooter.innerHTML = `
+          <select id="updateStatusSelect" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+            <option value="Chờ xác nhận" ${data.TrangThai==='Chờ xác nhận'?'selected':''}>Chờ xác nhận</option>
+            <option value="Đã xác nhận" ${data.TrangThai==='Đã xác nhận'?'selected':''}>Đã xác nhận</option>
+            <option value="Đang giao" ${data.TrangThai==='Đang giao'?'selected':''}>Đang giao</option>
+            <option value="Hoàn thành" ${data.TrangThai==='Hoàn thành'?'selected':''}>Hoàn thành</option>
+            <option value="Đã hủy" ${data.TrangThai==='Đã hủy'?'selected':''}>Đã hủy</option>
+          </select>
+          <button id="saveStatusBtn" class="btn btn-primary" style="background:#27ae60; color:#fff; padding: 10px 20px; border:none; border-radius:8px; cursor:pointer;">Lưu thay đổi</button>
+        `;
+
+        const existingFooter = modal.querySelector('.modal-footer');
+        if (!existingFooter) {
+            modal.querySelector('.modal-content').appendChild(modalFooter);
+        }
+
+        document.getElementById('saveStatusBtn').onclick = () => updateStatus(maHD);
         modal.classList.remove('hidden');
       });
+  }
+
+  function getStatusColor(status) {
+    switch(status) {
+      case 'Hoàn thành': return '#27ae60';
+      case 'Đang giao': return '#3498db';
+      case 'Đã xác nhận': return '#f1c40f';
+      case 'Đã hủy': return '#e74c3c';
+      default: return '#95a5a6';
+    }
+  }
+
+  // Cập nhật trạng thái
+  function updateStatus(maHD) {
+    const newStatus = document.getElementById('updateStatusSelect').value;
+    fetch(`/api/hoadon/${maHD}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trangThai: newStatus })
+    })
+    .then(res => res.json())
+    .then(data => {
+      alert('✅ Đã cập nhật trạng thái đơn hàng!');
+      modal.classList.add('hidden');
+      location.reload();
+    });
   }
 
   // ✅ Xác nhận đơn

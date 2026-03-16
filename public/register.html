@@ -3,42 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Đăng ký tài khoản</title>
+  <title>Đăng ký | Siêu thị</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
-<body class="login-page">
-  <div class="login-background-text">Tạo tài khoản mới để bắt đầu mua sắm</div>
-  <div class="login-container">
-    <div class="login-form">
-      <h2>Đăng ký</h2>
-      <div id="register-msg" style="color: red; margin-bottom: 10px; text-align: center;"></div>
-      <input type="text" id="reg-fullname" placeholder="Họ và tên" required />
-      <input type="text" id="reg-username" placeholder="Tên đăng nhập" required />
-      <input type="password" id="reg-password" placeholder="Mật khẩu" required />
-      <input type="tel" id="reg-phone" placeholder="Số điện thoại" required />
-      <button type="button" id="btn-register">Đăng ký ngay</button>
-      <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
-        Đã có tài khoản? <a href="login.html" style="color: #6c63ff; font-weight: 600;">Đăng nhập</a>
-      </p>
-    </div>
-  </div>
+<body class="auth-page">
+  <header class="main-header">
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link">Trang chủ</a>
+      <a href="categories.html" class="nav-link">Danh mục</a>
+      <a href="products.html" class="nav-link">Sản phẩm</a>
+    </nav>
+  </header>
 
+  <main class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Tạo tài khoản</h1>
+        <p>Tham gia cùng chúng tôi ngay hôm nay</p>
+      </div>
+      <form id="register-form" class="auth-form">
+        <div id="register-msg" style="color: #e74c3c; margin-bottom: 1rem; text-align: center; font-size: 0.9rem; font-weight: 500;"></div>
+        <div class="form-group">
+          <label><i class="bx bx-user-pin"></i> Họ và tên</label>
+          <input type="text" id="reg-fullname" placeholder="Nhập họ tên" required />
+        </div>
+        <div class="form-group">
+          <label><i class="bx bx-user"></i> Tên đăng nhập</label>
+          <input type="text" id="reg-username" placeholder="Nhập tên đăng nhập" required />
+        </div>
+        <div class="form-group">
+          <label><i class="bx bx-lock-alt"></i> Mật khẩu</label>
+          <input type="password" id="reg-password" placeholder="Nhập mật khẩu" required />
+        </div>
+        <div class="form-group">
+          <label><i class="bx bx-phone"></i> Số điện thoại</label>
+          <input type="tel" id="reg-phone" placeholder="Nhập số điện thoại" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Đăng ký ngay</button>
+        <p class="auth-switch">
+          Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="container">
+      <p class="footer-copy">© Siêu Thị 4 anh em. Dự án THCNPM.</p>
+    </div>
+  </footer>
+
+  <script src="user.js"></script>
   <script>
-    document.getElementById('btn-register').addEventListener('click', async () => {
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
       const fullName = document.getElementById('reg-fullname').value.trim();
       const username = document.getElementById('reg-username').value.trim();
       const password = document.getElementById('reg-password').value.trim();
       const phone = document.getElementById('reg-phone').value.trim();
       const msg = document.getElementById('register-msg');
-
-      if (!fullName || !username || !password || !phone) {
-        msg.textContent = 'Vui lòng điền đầy đủ thông tin!';
-        return;
-      }
 
       try {
         const resp = await fetch('/api/auth/register', {
@@ -46,16 +74,15 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fullName, username, password, phone })
         });
-
         const result = await resp.json();
         if (resp.ok) {
-          alert('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
+          alert('Đăng ký thành công! Đang chuyển hướng...');
           window.location.href = 'login.html';
         } else {
-          msg.textContent = result.message || 'Có lỗi xảy ra.';
+          msg.textContent = result.message || 'Lỗi đăng ký';
         }
-      } catch (e) {
-        msg.textContent = 'Lỗi kết nối server.';
+      } catch (err) {
+        msg.textContent = 'Lỗi kết nối server';
       }
     });
   </script>

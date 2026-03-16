@@ -1,19 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --primary-color: #27ae60;
-    --primary-hover: #219150;
-    --secondary-color: #e67e22;
-    --bg-color: #f8fafb;
-    --card-bg: #ffffff;
-    --text-color: #1e293b;
-    --text-muted: #64748b;
-    --green-color: #27ae60;
-    --light-green: #eafaf1;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.1);
-    --radius: 12px;
-    --radius-sm: 8px;
+  /* Tông màu chủ đạo (Siêu thị xanh) */
+  --primary-color: #27ae60;
+  --primary-hover: #219653;
+  --secondary-color: #f39c12; /* Màu nhấn phụ (cam/vàng) */
+  --bg-color: #f8fafb;
+  --text-color: #1e293b;
+  --text-muted: #64748b;
+  --card-bg: #ffffff;
+  
+  /* Gradient tươi mát */
+  --primary-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --light-green: #eafaf1;
+
+  /* Giữ lại --green-color để tương thích ngược nếu web có class cũ */
+  --green-color: var(--primary-color);
+
+  /* Hệ thống Shadow (Đổ bóng) */
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 25px rgba(39, 174, 96, 0.1); /* Bóng phản quang xanh */
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+  --shadow: var(--shadow-md);
+  --shadow-hover: var(--shadow-lg);
+
+  /* Hệ thống Border Radius (Bo góc mềm mại) */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius: var(--radius-lg);
+
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.4);
 }
 
 * {

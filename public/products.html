@@ -1,8 +1,3 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/products.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -16,48 +11,135 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
 </head>
 <body>
-  <header>
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
-    <ul class="navbar">
-      <li><a href="index.html">Trang chủ</a></li>
-      <li><a href="categories.html">Danh mục</a></li>
-      <li><a href="products.html" class="home-active">Sản phẩm</a></li>
-      <li><a href="cart.html"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
-      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn</a></li>
-    </ul>
-    <div class="profile">
-      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
-      <span>Khách</span>
-      <i class="bx bx-caret-down"></i>
-    </div>
-  </header>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
 
-  <section class="products-page">
-    <div class="heading horizontal-heading">
-      <h1><span>Danh sách</span> <span>Sản phẩm</span></h1>
+        <!-- Search Bar -->
+        <div class="header-search">
+          <input type="text" placeholder="Gõ tên trái cây, rau củ để tìm..." id="searchInputGlobal">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="action-item location-picker">
+            <i class='bx bx-map'></i>
+            <span>Giao đến<br><b>Chọn địa chỉ</b></span>
+          </div>
+          
+          <div class="action-item profile">
+            <i class='bx bx-user-circle'></i>
+            <span>Tài khoản<br><b>Đăng nhập</b></span>
+          </div>
+          
+          <a href="cart.html" class="action-item header-cart">
+            <div class="cart-icon">
+              <i class='bx bx-cart'></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <span>Giỏ hàng<br><b id="headerCartTotal">0đ</b></span>
+          </a>
+        </div>
+      </div>
     </div>
     
-    <div class="filter-bar" style="max-width: 1200px; margin: 0 auto 30px; display: flex; gap: 15px; flex-wrap: wrap; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-        <div class="filter-item" style="flex: 1; min-width: 200px;">
-            <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." style="width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem;">
-        </div>
-        <div class="filter-item">
-            <select id="category-filter" style="padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: #fff; cursor: pointer;">
+    <!-- Navigation Mega Menu -->
+    <nav class="main-nav-bottom">
+      <div class="container nav-container">
+        <ul class="mega-menu">
+          <li class="menu-item-has-children">
+            <a href="categories.html" class="menu-category-btn"><i class='bx bx-menu'></i> Danh mục sản phẩm</a>
+          </li>
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="products.html" class="nav-link active">Sản phẩm <span class="hot-badge">HOT</span></a></li>
+          <li><a href="products.html" class="nav-link">Combo tiết kiệm</a></li>
+          <li><a href="invoices.html" class="nav-link">Tra cứu đơn hàng</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <section class="plp-page">
+    <div class="container plp-layout">
+      <!-- Sidebar Filters -->
+      <aside class="plp-sidebar">
+        <div class="filter-block">
+          <h3 class="filter-heading"><i class='bx bx-filter-alt'></i> Bộ lọc tìm kiếm</h3>
+          
+          <!-- Category Filter -->
+          <div class="filter-group">
+            <h4>Danh mục</h4>
+            <select id="category-filter" class="form-select">
                 <option value="all">Tất cả danh mục</option>
             </select>
-        </div>
-        <div class="filter-item">
-            <select id="price-filter" style="padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: #fff; cursor: pointer;">
+          </div>
+          
+          <!-- Price Filter -->
+          <div class="filter-group">
+            <h4>Mức giá</h4>
+            <select id="price-filter" class="form-select">
                 <option value="all">Mọi mức giá</option>
                 <option value="0-50000">Dưới 50.000₫</option>
                 <option value="50000-100000">50.000₫ - 100.000₫</option>
                 <option value="100000-above">Trên 100.000₫</option>
             </select>
-        </div>
-    </div>
+          </div>
 
-    <div class="products-container" id="products-list"></div>
+          <!-- Tags Filter -->
+          <div class="filter-group">
+            <h4>Nhãn đặc biệt</h4>
+            <label class="custom-checkbox"><input type="checkbox"> <span class="checkmark"></span> Khuyến mãi</label>
+            <label class="custom-checkbox"><input type="checkbox"> <span class="checkmark"></span> Hữu cơ (Organic)</label>
+            <label class="custom-checkbox"><input type="checkbox"> <span class="checkmark"></span> VietGAP</label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Product Listing -->
+      <main class="plp-main">
+        <div class="plp-toolbar">
+          <div class="toolbar-left">
+            <h1 class="page-title">Sản phẩm</h1>
+            <span class="product-count">Hiển thị kết quả</span>
+          </div>
+          <div class="toolbar-right">
+             <div class="search-box">
+                <input type="text" id="search-input" placeholder="Tìm sản phẩm ở đây...">
+                <i class='bx bx-search'></i>
+             </div>
+             <select class="form-select sort-select">
+                <option>Sắp xếp: Mặc định</option>
+                <option>Giá thấp đến cao</option>
+                <option>Giá cao đến thấp</option>
+                <option>Bán chạy</option>
+             </select>
+          </div>
+        </div>
+        
+        <!-- Grid -->
+        <div class="products-grid" id="products-list">
+          <!-- Products injected by JS -->
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </main>
+    </div>
   </section>
+
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none;">
+        <p class="footer-copy">© 2026 Siêu Thị Xanh. All rights reserved. Đồ án THCNPM.</p>
+      </div>
+    </div>
+  </footer>
 
   <script src="user.js"></script>
   <script src="products.js"></script>

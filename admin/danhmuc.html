@@ -1,24 +1,23 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/admin/danhmuc.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <title>Quản lý danh mục</title>
   <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <body>
   <!-- Sidebar -->
   <aside class="sidebar">
     <h2>Coopmart Admin</h2>
     <ul>
-      <li><a href="admin.html">📊 Dashboard</a></li>
-      <li><a href="sanpham.html">📦 Sản phẩm</a></li>
-      <li><a href="danhmuc.html" class="active">📁 Danh mục</a></li>
-      <li><a href="hoadon.html">📝 Hóa đơn</a></li>
+      <li><a href="admin.html"><i class="bx bx-grid-alt"></i> Dashboard</a></li>
+      <li><a href="sanpham.html"><i class="bx bx-box"></i> Sản phẩm</a></li>
+      <li><a href="danhmuc.html" class="active"><i class="bx bx-category"></i> Danh mục</a></li>
+      <li><a href="hoadon.html"><i class="bx bx-receipt"></i> Hóa đơn</a></li>
+      <li><a href="users.html"><i class="bx bx-user"></i> Người dùng</a></li>
+      <li><a href="vouchers.html"><i class="bx bx-purchase-tag"></i> Voucher</a></li>
+      <li><a href="../index.html" style="margin-top: 2rem; color: #ef4444;"><i class="bx bx-log-out"></i> Thoát</a></li>
     </ul>
   </aside>
 

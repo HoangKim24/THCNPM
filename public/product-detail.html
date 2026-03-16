@@ -1,8 +1,3 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/product-detail.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -16,19 +11,58 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <body>
-  <header>
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
-    <ul class="navbar">
-      <li><a href="index.html">Trang chủ</a></li>
-      <li><a href="categories.html">Danh mục</a></li>
-      <li><a href="products.html">Sản phẩm</a></li>
-      <li><a href="cart.html"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
-      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn</a></li>
-    </ul>
-    <div class="profile">
-      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
-      <span>Khách</span>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <input type="text" placeholder="Gõ tên trái cây, rau củ để tìm..." id="searchInputGlobal">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="action-item location-picker">
+            <i class='bx bx-map'></i>
+            <span>Giao đến<br><b>Chọn địa chỉ</b></span>
+          </div>
+          
+          <div class="action-item profile">
+            <i class='bx bx-user-circle'></i>
+            <span>Tài khoản<br><b>Đăng nhập</b></span>
+          </div>
+          
+          <a href="cart.html" class="action-item header-cart">
+            <div class="cart-icon">
+              <i class='bx bx-cart'></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <span>Giỏ hàng<br><b id="headerCartTotal">0đ</b></span>
+          </a>
+        </div>
+      </div>
     </div>
+    
+    <!-- Navigation Mega Menu -->
+    <nav class="main-nav-bottom">
+      <div class="container nav-container">
+        <ul class="mega-menu">
+          <li class="menu-item-has-children">
+            <a href="categories.html" class="menu-category-btn"><i class='bx bx-menu'></i> Danh mục sản phẩm</a>
+          </li>
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="products.html" class="nav-link">Sản phẩm <span class="hot-badge">HOT</span></a></li>
+          <li><a href="products.html" class="nav-link">Combo tiết kiệm</a></li>
+          <li><a href="invoices.html" class="nav-link">Tra cứu đơn hàng</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
   <main class="product-detail-page">
@@ -61,29 +95,80 @@
           const unit = (sp.DonViTinh || '').replace(/</g, '&lt;');
 
           wrap.innerHTML = `
-            <a href="products.html" class="back-link"><i class="bx bx-arrow-back"></i> Về danh sách sản phẩm</a>
+            <div class="breadcrumb">
+               <a href="index.html">Trang chủ</a> / <a href="products.html">Sản phẩm</a> / <span>${name}</span>
+            </div>
+            
             <div class="product-detail-card">
-              <div class="product-detail-image">
-                <img src="${imgSrc}" alt="${name}" onerror="this.src='${DEFAULT_IMG}'">
-              </div>
-              <div class="product-detail-info">
-                <h1>${name}</h1>
-                <p class="product-detail-unit">Đơn vị: ${unit || '—'}</p>
-                <p class="product-detail-price">${price.toLocaleString('vi-VN')}₫</p>
-                <div class="product-detail-actions">
-                  <div class="qty-group">
-                    <label>Số lượng:</label>
-                    <div class="qty-controls">
-                      <button type="button" class="qty-btn minus" aria-label="Giảm">−</button>
-                      <input type="number" id="detail-qty" value="1" min="1" max="999" readonly>
-                      <button type="button" class="qty-btn plus" aria-label="Tăng">+</button>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-add-detail" data-id="${sp.MaSanPham}" data-name="${name}" data-price="${price}">
-                    <i class="bx bx-cart-add"></i> Thêm vào giỏ hàng
-                  </button>
+              <!-- Cột Ảnh (Media Gallery) -->
+              <div class="product-gallery">
+                <div class="main-img-box zoom-img-wrap">
+                  <img src="${imgSrc}" alt="${name}" onerror="this.src='${DEFAULT_IMG}'" class="zoom-img">
+                </div>
+                <div class="thumb-list">
+                   <div class="thumb-item active"><img src="${imgSrc}" alt="1"></div>
+                   <!-- Tương lai: Thêm các ảnh nhỏ khác nếu có -->
                 </div>
               </div>
+
+              <!-- Cột Thông tin (Product Info) -->
+              <div class="product-info-box">
+                <div class="product-labels">
+                  <span class="label success">Phổ biến</span>
+                  <span class="label warning">Freeship</span>
+                </div>
+                <h1 class="product-title">${name}</h1>
+                <div class="product-meta">
+                   <span class="rating"><i class='bx bxs-star'></i> 4.8 (120 đánh giá)</span>
+                   <span class="sku">SKU: SP-${id.padStart(5, '0')}</span>
+                   <span class="status in-stock"><i class='bx bx-check-circle'></i> Còn hàng</span>
+                </div>
+                
+                <div class="price-box">
+                  <div class="current-price">${price.toLocaleString('vi-VN')}₫</div>
+                  <div class="unit-price">Đơn vị: <b>${unit || 'Khay/Hộp'}</b></div>
+                </div>
+
+                <div class="short-desc">
+                  Thực phẩm sạch đảm bảo chất lượng, tươi ngon báo ngày. Hỗ trợ đổi trả nếu không đạt yêu cầu.
+                </div>
+
+                <div class="purchase-actions sticky-mobile">
+                  <div class="qty-selector">
+                    <button type="button" class="qty-btn minus"><i class='bx bx-minus'></i></button>
+                    <input type="number" id="detail-qty" value="1" min="1" max="99" readonly>
+                    <button type="button" class="qty-btn plus"><i class='bx bx-plus'></i></button>
+                  </div>
+                  <button type="button" class="btn btn-add-detail" data-id="${sp.MaSanPham}">
+                    <i class="bx bx-cart-add"></i> <span>Thêm vào giỏ</span>
+                  </button>
+                  <button type="button" class="btn btn-buy-now">
+                    Mua ngay
+                  </button>
+                </div>
+                
+                <div class="delivery-perk">
+                  <p><i class='bx bx-truck'></i> <b>Giao hàng siêu tốc 2H</b></p>
+                  <p><i class='bx bx-shield-quarter'></i> Hoàn tiền 100% nếu phát hiện hàng giả, hàng kém chất lượng.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Khung Tabs Thông tin chi tiết -->
+            <div class="product-tabs-section">
+               <ul class="tabs-nav">
+                  <li class="active">Mô tả chi tiết</li>
+                  <li>Hướng dẫn bảo quản</li>
+                  <li>Đánh giá (120)</li>
+               </ul>
+               <div class="tab-content active">
+                 <p>Sản phẩm <strong>${name}</strong> được tuyển chọn từ các nông trại đạt tiêu chuẩn cao nhất. Trái cây tươi mới, không chất bảo quản, giữ trọn hương vị tự nhiên và vitamin.</p>
+                 <p>Đặc tính nổi bật: <br>
+                    - Hương vị thơm ngon tự nhiên.<br>
+                    - Đóng gói an toàn vệ sinh thực phẩm.<br>
+                    - Nguồn gốc xuất xứ rõ ràng.
+                 </p>
+               </div>
             </div>
           `;
 
@@ -91,27 +176,40 @@
           const minusBtn = wrap.querySelector('.qty-btn.minus');
           const plusBtn = wrap.querySelector('.qty-btn.plus');
           const addBtn = wrap.querySelector('.btn-add-detail');
+          const buyNowBtn = wrap.querySelector('.btn-buy-now');
 
           minusBtn.addEventListener('click', () => {
             const v = Math.max(1, parseInt(qtyInput.value, 10) - 1);
             qtyInput.value = v;
           });
           plusBtn.addEventListener('click', () => {
-            const v = Math.min(999, parseInt(qtyInput.value, 10) + 1);
+             const v = Math.min(99, parseInt(qtyInput.value, 10) + 1);
             qtyInput.value = v;
           });
 
-          addBtn.addEventListener('click', () => {
+          const addToCart = (redirect) => {
             const qty = parseInt(qtyInput.value, 10) || 1;
             let cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const existing = cart.find(i => i.MaSanPham == sp.MaSanPham);
             if (existing) existing.quantity += qty;
             else cart.push({ MaSanPham: sp.MaSanPham, name: sp.TenSanPham, price, quantity: qty });
             localStorage.setItem('cart', JSON.stringify(cart));
-            if (confirm('Đã thêm vào giỏ. Bạn có muốn đến trang giỏ hàng không?')) {
-              window.location.href = 'cart.html';
+            
+            if(redirect) {
+               window.location.href = 'cart.html';
+            } else {
+               const originalObj = addBtn.innerHTML;
+               addBtn.innerHTML = '<i class="bx bx-check"></i> Đã thêm';
+               addBtn.style.background = 'var(--secondary-color)';
+               setTimeout(() => {
+                  addBtn.innerHTML = originalObj;
+                  addBtn.style.background = '';
+               }, 1500);
             }
-          });
+          };
+
+          addBtn.addEventListener('click', () => addToCart(false));
+          buyNowBtn.addEventListener('click', () => addToCart(true));
         })
         .catch(() => {
           document.getElementById('product-detail-content').innerHTML = '<p class="error-msg">Lỗi tải sản phẩm. <a href="products.html">Quay lại</a></p>';

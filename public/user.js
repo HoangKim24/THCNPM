@@ -14,8 +14,46 @@
   }
 
   const currentUser = localStorage.getItem('currentUser') || 'Khách';
+  const profileSection = document.querySelector('.profile');
   const profileSpan = document.querySelector('.profile span');
+  
   if (profileSpan) profileSpan.textContent = currentUser;
+
+  // Logout function
+  function logout() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+  }
+
+  // Create Dropdown if logged in
+  if (currentUser !== 'Khách' && profileSection) {
+    const dropdown = document.createElement('div');
+    dropdown.className = 'profile-dropdown hidden';
+    dropdown.innerHTML = `
+      <a href="profile.html"><i class="bx bx-user"></i> Thông tin cá nhân</a>
+      <a href="#" id="logout-btn"><i class="bx bx-log-out"></i> Đăng xuất</a>
+    `;
+    profileSection.appendChild(dropdown);
+    profileSection.style.cursor = 'pointer';
+
+    profileSection.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle('hidden');
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      logout();
+    });
+
+    document.addEventListener('click', () => {
+      dropdown.classList.add('hidden');
+    });
+  } else if (profileSection) {
+    profileSection.addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+  }
 
   // Giỏ hàng: toggle panel trên mọi trang có cart-toggle
   const cartToggle = document.getElementById('cart-toggle');

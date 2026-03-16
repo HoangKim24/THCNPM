@@ -1,34 +1,85 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/categories.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Danh mục | Siêu thị</title>
+  <title>Danh mục sản phẩm | Siêu Thị Xanh</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/pages.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-  <header>
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
-    <ul class="navbar">
-      <li><a href="index.html">Trang chủ</a></li>
-      <li><a href="categories.html" class="home-active">Danh mục</a></li>
-      <li><a href="products.html">Sản phẩm</a></li>
-      <li><a href="cart.html"><i class='bx bx-cart'></i> Giỏ hàng</a></li>
-      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn</a></li>
-    </ul>
-    <div class="profile">
-      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
-      <span>Khách</span>
+<body class="categories-page">
+  <header class="main-header">
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+          <input type="text" placeholder="Gõ tên trái cây, rau củ để tìm..." id="searchInputGlobal">
+          <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+          <div class="search-suggestions hidden"></div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <div class="action-item location-picker">
+            <i class='bx bx-map'></i>
+            <span>Giao đến<br><b>Chọn địa chỉ</b></span>
+          </div>
+          
+          <div class="action-item profile">
+            <i class='bx bx-user-circle'></i>
+            <span>Tài khoản<br><b>Đăng nhập</b></span>
+          </div>
+          
+          <a href="cart.html" class="action-item header-cart">
+            <div class="cart-icon">
+              <i class='bx bx-cart'></i>
+              <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+            <span>Giỏ hàng<br><b id="headerCartTotal">0đ</b></span>
+          </a>
+        </div>
+      </div>
     </div>
+    
+    <!-- Navigation Mega Menu -->
+    <nav class="main-nav-bottom">
+      <div class="container nav-container">
+        <ul class="mega-menu">
+          <li class="menu-item-has-children">
+            <a href="categories.html" class="menu-category-btn"><i class='bx bx-menu'></i> Danh mục sản phẩm</a>
+            <div class="mega-dropdown">
+               <div class="mega-column">
+                 <h4>Thực phẩm tươi sống</h4>
+                 <a href="products.html">Rau ăn lá</a>
+                 <a href="products.html">Củ quả tươi</a>
+                 <a href="products.html">Trái cây nội địa</a>
+                 <a href="products.html">Trái cây nhập khẩu</a>
+               </div>
+               <div class="mega-column">
+                 <h4>Thịt & Thủy hải sản</h4>
+                 <a href="products.html">Thịt heo, bò, gà</a>
+                 <a href="products.html">Cá & Hải sản tươi</a>
+               </div>
+            </div>
+          </li>
+          <li><a href="index.html" class="nav-link">Trang chủ</a></li>
+          <li><a href="products.html" class="nav-link">Sản phẩm khuyến mãi <span class="hot-badge">HOT</span></a></li>
+          <li><a href="products.html" class="nav-link">Combo tiết kiệm</a></li>
+          <li><a href="invoices.html" class="nav-link">Tra cứu đơn hàng</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
 
   <div id="cart-panel" class="cart-panel hidden">
@@ -38,11 +89,11 @@
     <a href="products.html" class="btn" style="margin-top:10px; display:inline-block; text-align:center;">Đến sản phẩm</a>
   </div>
 
-  <section class="products-page">
-    <div class="heading horizontal-heading">
-      <h1><span>Danh mục</span> <span>Sản phẩm</span></h1>
+  <section class="shop-categories container">
+    <div class="section-header">
+      <h2 class="section-title">Khám phá <span>Danh Mục</span></h2>
     </div>
-    <div id="categories-list" class="products-container"></div>
+    <div id="categories-list" class="cat-grid"></div>
   </section>
 
   <script src="user.js"></script>
@@ -56,13 +107,12 @@
         data.forEach(dm => {
           const imgSrc = (dm.HinhAnh ? 'images/' + dm.HinhAnh : DEFAULT_IMG);
           list.innerHTML += `
-            <div class="product-box">
-              <img src="${imgSrc}" alt="${dm.TenDanhMuc || 'Danh mục'}" class="category-img" onerror="this.src='${DEFAULT_IMG}'">
-              <div class="product-info">
-                <h3>${dm.TenDanhMuc || 'Danh mục'}</h3>
+            <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="cat-item">
+              <div class="cat-item-img">
+                <img src="${imgSrc}" alt="${dm.TenDanhMuc || 'Danh mục'}" onerror="this.src='${DEFAULT_IMG}'">
               </div>
-              <a href="products.html?danhmuc=${dm.MaDanhMuc}" class="btn">Xem sản phẩm</a>
-            </div>
+              <span class="cat-item-name">${dm.TenDanhMuc || 'Danh mục'}</span>
+            </a>
           `;
         });
       })

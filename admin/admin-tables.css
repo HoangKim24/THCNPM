@@ -1,0 +1,55 @@
+/* 📦 Bảng (Dùng chung cho tất cả các trang admin) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+th, td {
+  border-bottom: 1px solid #f1f5f9;
+  padding: 14px 16px;
+  text-align: left;
+  color: #334155;
+}
+
+th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+tr:hover {
+  background-color: #f8fafc;
+}
+
+/* ✏️ Nút thao tác bảng */
+.btn-sua, .btn-xoa {
+  border: none;
+  padding: 6px 12px;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
+}
+
+.btn-sua {
+  background: #f59e0b;
+  margin-right: 8px;
+}
+
+.btn-xoa {
+  background: #ef4444;
+}
+
+.btn-sua:hover, .btn-xoa:hover {
+  opacity: 0.85;
+}

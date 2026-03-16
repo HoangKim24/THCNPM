@@ -9,19 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="sidebar">
-    <div class="logo">
-      <i class="bx bxs-shopping-bag-alt"></i>
-      <span>AdminPanel</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="admin.html"><i class="bx bx-grid-alt"></i> Thống kê</a></li>
+  <aside class="sidebar">
+    <h2>Coopmart Admin</h2>
+    <ul>
+      <li><a href="admin.html"><i class="bx bx-grid-alt"></i> Dashboard</a></li>
       <li><a href="sanpham.html"><i class="bx bx-box"></i> Sản phẩm</a></li>
       <li><a href="danhmuc.html"><i class="bx bx-category"></i> Danh mục</a></li>
+      <li><a href="hoadon.html"><i class="bx bx-receipt"></i> Hóa đơn</a></li>
       <li><a href="users.html" class="active"><i class="bx bx-user"></i> Người dùng</a></li>
-      <li><a href="/index.html" class="logout"><i class="bx bx-log-out"></i> Thoát</a></li>
+      <li><a href="vouchers.html"><i class="bx bx-purchase-tag"></i> Voucher</a></li>
+      <li><a href="../index.html" style="margin-top: 2rem; color: #ef4444;"><i class="bx bx-log-out"></i> Thoát</a></li>
     </ul>
-  </div>
+  </aside>
 
   <div class="main-content">
     <header>
@@ -35,17 +34,26 @@
       </div>
     </header>
 
-    <main>
-      <div class="table-container" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <main style="padding: 2rem;">
+      <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div style="position: relative; width: 300px;">
+          <i class="bx bx-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+          <input type="text" placeholder="Tìm kiếm người dùng..." style="width: 100%; padding: 10px 10px 10px 35px; border: 1px solid #ddd; border-radius: 8px; outline: none;">
+        </div>
+        <div style="color: #666; font-size: 0.9rem;">
+          Tổng cộng: <strong id="user-count">0</strong> người dùng
+        </div>
+      </div>
+
+      <div class="table-container" style="background: #fff; padding: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #eee;">
         <table style="width: 100%; border-collapse: collapse;">
           <thead>
-            <tr style="text-align: left; border-bottom: 2px solid #eee;">
-              <th style="padding: 12px;">ID</th>
-              <th style="padding: 12px;">Tên đăng nhập</th>
-              <th style="padding: 12px;">Họ tên</th>
-              <th style="padding: 12px;">Quyền</th>
-              <th style="padding: 12px;">Trạng thái</th>
-              <th style="padding: 12px;">Thao tác</th>
+            <tr style="background: #f8faf9; text-align: left; border-bottom: 1px solid #eee;">
+              <th style="padding: 1.25rem; font-weight: 700; color: #444; font-size: 0.9rem;">NGƯỜI DÙNG</th>
+              <th style="padding: 1.25rem; font-weight: 700; color: #444; font-size: 0.9rem;">QUYỀN HẠN</th>
+              <th style="padding: 1.25rem; font-weight: 700; color: #444; font-size: 0.9rem;">SỐ ĐIỆN THOẠI</th>
+              <th style="padding: 1.25rem; font-weight: 700; color: #444; font-size: 0.9rem;">TRẠNG THÁI</th>
+              <th style="padding: 1.25rem; font-weight: 700; color: #444; font-size: 0.9rem; text-align: right;">THAO TÁC</th>
             </tr>
           </thead>
           <tbody id="users-list">
@@ -62,19 +70,39 @@
         const resp = await fetch('/api/admin/users');
         const users = await resp.json();
         const tbody = document.getElementById('users-list');
+        document.getElementById('user-count').textContent = users.length;
         tbody.innerHTML = users.map(u => `
-          <tr style="border-bottom: 1px solid #f0f0f0;">
-            <td style="padding: 12px;">${u.MaNguoiDung}</td>
-            <td style="padding: 12px;">${u.Username}</td>
-            <td style="padding: 12px;">${u.FullName || '—'}</td>
-            <td style="padding: 12px;"><span style="padding: 4px 8px; border-radius: 4px; background: ${u.Role==='admin'?'#e3f2fd':'#f5f5f5'}; color: ${u.Role==='admin'?'#1976d2':'#666'}; font-size: 0.85rem;">${u.Role}</span></td>
-            <td style="padding: 12px;"><span style="color: ${u.Status==='active'?'#2e7d32':'#d32f2f'}; font-weight: 600;">${u.Status}</span></td>
-            <td style="padding: 12px;">
+          <tr style="border-bottom: 1px solid #f8f8f8; transition: background 0.2s;">
+            <td style="padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: #f0fdf4; color: #27ae60; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem;">
+                  ${u.FullName ? u.FullName.charAt(0).toUpperCase() : u.Username.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #333;">${u.FullName || 'Chưa cập nhật'}</div>
+                  <div style="font-size: 0.8rem; color: #888;">@${u.Username}</div>
+                </div>
+              </div>
+            </td>
+            <td style="padding: 1.25rem;">
+              <span style="padding: 4px 10px; border-radius: 99px; background: ${u.Role==='admin'?'#fff4e5':'#f0fdf4'}; color: ${u.Role==='admin'?'#d97706':'#166534'}; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">
+                ${u.Role}
+              </span>
+            </td>
+            <td style="padding: 1.25rem; font-weight: 500; color: #666;">${u.Phone || '—'}</td>
+            <td style="padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; color: ${u.Status==='active'?'#22c55e':'#ef4444'}; font-weight: 600; font-size: 0.9rem;">
+                <span style="width: 8px; height: 8px; border-radius: 50%; background: currentColor;"></span>
+                ${u.Status === 'active' ? 'Hoạt động' : 'Bị khóa'}
+              </div>
+            </td>
+            <td style="padding: 1.25rem; text-align: right;">
               ${u.Role !== 'admin' ? `
-                <button onclick="toggleStatus(${u.MaNguoiDung}, '${u.Status}')" style="padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; background: ${u.Status==='active'?'#ffebee':'#e8f5e9'}; color: ${u.Status==='active'?'#c62828':'#2e7d32'}; font-weight: 600;">
+                <button onclick="toggleStatus(${u.MaNguoiDung}, '${u.Status}')" style="padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; background: ${u.Status==='active'?'#fee2e2':'#dcfce7'}; color: ${u.Status==='active'?'#dc2626':'#15803d'}; font-weight: 700; font-size: 0.85rem; transition: all 0.2s;">
+                  <i class="bx ${u.Status==='active'?'bx-lock-alt':'bx-lock-open-alt'}"></i> 
                   ${u.Status==='active'?'Khóa':'Mở khóa'}
                 </button>
-              ` : '—'}
+              ` : '<span style="color: #ccc;">Hệ thống</span>'}
             </td>
           </tr>
         `).join('');

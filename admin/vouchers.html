@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý Voucher | Admin</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+  <style>
+    .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
+    .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+    .btn-add { background: #27ae60; color: #fff; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 15px; border-bottom: 2px solid #eee; color: #666; }
+    td { padding: 15px; border-bottom: 1px solid #f8f8f8; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: #fff; padding: 30px; border-radius: 12px; width: 450px; }
+    .hidden { display: none; }
+    input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
+  </style>
+</head>
+<body class="admin-page">
+  <nav class="sidebar">
+    <div class="logo">Admin Panel</div>
+    <ul class="nav-links">
+      <li><a href="admin.html"><i class="bx bx-grid-alt"></i> Dashboard</a></li>
+      <li><a href="users.html"><i class="bx bx-user"></i> Người dùng</a></li>
+      <li><a href="sanpham.html"><i class="bx bx-box"></i> Sản phẩm</a></li>
+      <li><a href="danhmuc.html"><i class="bx bx-category"></i> Danh mục</a></li>
+      <li><a href="hoadon.html"><i class="bx bx-receipt"></i> Hóa đơn</a></li>
+      <li><a href="vouchers.html" class="active"><i class="bx bx-purchase-tag"></i> Voucher</a></li>
+      <li><a href="../index.html"><i class="bx bx-log-out"></i> Xem Store</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+      <h1>Quản lý Voucher</h1>
+      <button class="btn btn-add" id="openAddModal"><i class="bx bx-plus"></i> Thêm Voucher</button>
+    </header>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Code</th>
+            <th>Giảm giá</th>
+            <th>Mô tả</th>
+            <th>Hết hạn</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="vouchers-list">
+          <tr><td colspan="5" style="text-align: center;">Đang tải...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Thêm -->
+  <div id="addModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Thêm Voucher mới</h2>
+      <form id="addVoucherForm">
+        <label>Mã Code (VD: GIAM20K)</label>
+        <input type="text" id="v-code" required>
+        <label>Giá trị giảm (VNĐ)</label>
+        <input type="number" id="v-giam" required>
+        <label>Mô tả</label>
+        <textarea id="v-mota" rows="2"></textarea>
+        <label>Ngày hết hạn</label>
+        <input type="date" id="v-date">
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn btn-add" style="flex: 1;">Lưu</button>
+          <button type="button" class="btn" id="closeModal" style="background: #eee;">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="vouchers.js"></script>
+</body>
+</html>

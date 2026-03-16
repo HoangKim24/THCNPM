@@ -1,32 +1,30 @@
-<script>
-  if (!location.href.startsWith("http://localhost:3000")) {
-    location.href = "http://localhost:3000/invoice.html";
-  }
-</script>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hóa đơn | Siêu thị</title>
+  <title>Chi tiết hóa đơn | Siêu Thị Xanh</title>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/pages.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em siêu nhân</a>
-    <ul class="navbar">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="categories.html">Categories</a></li>
-      <li><a href="products.html">Sản phẩm</a></li>
-      <li><a href="invoices.html"><i class='bx bx-receipt'></i> Hóa đơn của tôi</a></li>
-    </ul>
-    <div class="profile">
-      <img src="images/HinhAnh-1752415674712-693980431.jpg" alt="Avatar">
-      <span>Khách</span>
+  <header class="main-header">
+    <div class="header-top">
+      <div class="container header-container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+          <i class="bx bxs-store-alt" style="color:var(--primary-color)"></i> Siêu Thị Xanh
+        </a>
+        <div class="header-actions">
+           <a href="invoices.html" class="btn">Quay lại danh sách</a>
+        </div>
+      </div>
     </div>
   </header>
   <section class="invoice-page">

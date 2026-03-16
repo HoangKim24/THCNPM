@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thông tin cá nhân | Siêu thị</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+</head>
+<body class="profile-page">
+  <header class="main-header">
+    <a href="index.html" class="logo"><i class="bx bxs-basket"></i> Siêu Thị 4 anh em</a>
+    <nav class="main-nav">
+      <a href="index.html" class="nav-link">Trang chủ</a>
+      <a href="categories.html" class="nav-link">Danh mục</a>
+      <a href="products.html" class="nav-link">Sản phẩm</a>
+    </nav>
+    <div class="profile">
+      <i class='bx bx-user-circle' style="font-size: 2rem; color: var(--text-muted);"></i>
+      <span>Khách</span>
+    </div>
+  </header>
+
+  <main class="container" style="padding-top: 120px; padding-bottom: 60px;">
+    <div class="profile-layout" style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
+      <aside class="profile-sidebar">
+        <div class="card" style="padding: 2rem; text-align: center;">
+          <div class="avatar-wrapper" style="position: relative; width: 150px; height: 150px; margin: 0 auto 1.5rem; border-radius: 50%; overflow: hidden; border: 4px solid var(--primary-color); background: #f0fdf4;">
+            <img id="profile-avatar-img" src="images/placeholder-avatar.png" style="width: 100%; height: 100%; object-fit: cover;">
+            <label for="avatar-input" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: #fff; padding: 5px; font-size: 0.75rem; cursor: pointer; opacity: 0; transition: opacity 0.2s;">Thay đổi</label>
+            <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+          </div>
+          <h2 id="display-username">—</h2>
+          <p id="display-role" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Thành viên</p>
+          
+          <nav class="profile-nav" style="text-align: left;">
+            <a href="#info-section" style="display: block; padding: 0.75rem 1rem; border-radius: 8px; color: var(--text-color); margin-bottom: 0.5rem; background: #f0fdf4; color: var(--primary-color); font-weight: 600;"><i class='bx bx-user'></i> Thông tin chung</a>
+            <a href="#password-section" style="display: block; padding: 0.75rem 1rem; border-radius: 8px; color: var(--text-color); margin-bottom: 0.5rem;"><i class='bx bx-lock-alt'></i> Đổi mật khẩu</a>
+            <a href="#orders-section" style="display: block; padding: 0.75rem 1rem; border-radius: 8px; color: var(--text-color);"><i class='bx bx-history'></i> Đơn hàng</a>
+          </nav>
+        </div>
+      </aside>
+
+      <section class="profile-content">
+        <div id="info-section" class="card" style="padding: 2.5rem; margin-bottom: 2rem;">
+          <h2 style="margin-bottom: 2rem;"><i class="bx bx-edit"></i> Thông tin cá nhân</h2>
+          <form id="profile-form">
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <div class="form-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Họ và tên</label>
+                <input type="text" id="prof-fullName" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" required>
+              </div>
+              <div class="form-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Số điện thoại</label>
+                <input type="tel" id="prof-phone" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" required>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Địa chỉ giao hàng</label>
+                <input type="text" id="prof-address" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">Cập nhật hồ sơ</button>
+          </form>
+        </div>
+
+        <div id="password-section" class="card" style="padding: 2.5rem; margin-bottom: 2rem;">
+          <h2 style="margin-bottom: 2rem;"><i class="bx bx-key"></i> Bảo mật</h2>
+          <form id="change-password-form">
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mật khẩu hiện tại</label>
+                <input type="password" id="old-pass" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" required>
+              </div>
+              <div class="form-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mật khẩu mới</label>
+                <input type="password" id="new-pass" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" required>
+              </div>
+              <div class="form-group">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Xác nhận mật khẩu</label>
+                <input type="password" id="cfm-pass" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem; background: #666; border-color: #666;">Đổi mật khẩu</button>
+          </form>
+        </div>
+
+        <div id="orders-section" class="card" style="padding: 2.5rem;">
+          <h2 style="margin-bottom: 2rem;"><i class="bx bx-history"></i> Lịch sử mua hàng</h2>
+          <div id="order-history-list">
+            <p>Đang tải đơn hàng...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="main-footer">
+    <div class="container">
+      <p class="footer-copy">© Siêu Thị 4 anh em. Dự án THCNPM.</p>
+    </div>
+  </footer>
+
+  <script src="user.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const username = localStorage.getItem('currentUser');
+      if (!username || username === 'Khách') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('display-username').textContent = username;
+
+      // Load Profile
+      try {
+        const resp = await fetch(`/api/user/profile/${username}`);
+        const user = await resp.json();
+        document.getElementById('prof-fullName').value = user.FullName || '';
+        document.getElementById('prof-phone').value = user.Phone || '';
+        document.getElementById('prof-address').value = user.Address || '';
+        if (user.Avatar) {
+            document.getElementById('profile-avatar-img').src = 'images/' + user.Avatar;
+        }
+        
+        // Save phone to latestOrder for orders filtering if not set
+        const latest = JSON.parse(localStorage.getItem('latestOrder') || '{}');
+        if (!latest.soDienThoai && user.Phone) {
+            localStorage.setItem('latestOrder', JSON.stringify({ ...latest, soDienThoai: user.Phone }));
+        }
+      } catch (e) {
+        console.error('Lỗi tải profile');
+      }
+
+      // Handle Avatar Upload Preview
+      const avatarInput = document.getElementById('avatar-input');
+      const avatarImg = document.getElementById('profile-avatar-img');
+      avatarInput.addEventListener('change', function() {
+          if (this.files && this.files[0]) {
+              const reader = new FileReader();
+              reader.onload = (e) => avatarImg.src = e.target.result;
+              reader.readAsDataURL(this.files[0]);
+          }
+      });
+
+      // Handle Submit Info
+      document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('prof-fullName').value;
+        const phone = document.getElementById('prof-phone').value;
+        const address = document.getElementById('prof-address').value;
+        const avatarFile = avatarInput.files[0];
+
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('fullName', fullName);
+        formData.append('phone', phone);
+        formData.append('address', address);
+        if (avatarFile) formData.append('Avatar', avatarFile);
+
+        try {
+          const resp = await fetch('/api/user/profile', {
+            method: 'PUT',
+            body: formData
+          });
+          if (resp.ok) {
+            alert('Cập nhật hồ sơ thành công!');
+            const latest = JSON.parse(localStorage.getItem('latestOrder') || '{}');
+            localStorage.setItem('latestOrder', JSON.stringify({ ...latest, soDienThoai: phone }));
+            location.reload();
+          } else {
+              const err = await resp.text();
+              alert('Lỗi: ' + err);
+          }
+        } catch (e) {
+          alert('Lỗi kết nối server');
+        }
+      });
+
+      // Handle Change Password
+      document.getElementById('change-password-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const oldPass = document.getElementById('old-pass').value;
+        const newPass = document.getElementById('new-pass').value;
+        const cfmPass = document.getElementById('cfm-pass').value;
+
+        if (newPass !== cfmPass) {
+            alert('Mật khẩu xác nhận không khớp!');
+            return;
+        }
+
+        try {
+          const resp = await fetch('/api/user/change-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, oldPass, newPass })
+          });
+          if (resp.ok) {
+            alert('Đổi mật khẩu thành công!');
+            document.getElementById('change-password-form').reset();
+          } else {
+            const err = await resp.text();
+            alert('Lỗi: ' + err);
+          }
+        } catch (e) {
+          alert('Lỗi kết nối');
+        }
+      });
+
+      // Load Orders (Reuse logic from invoices.js content)
+      async function loadOrders() {
+        const historyContainer = document.getElementById('order-history-list');
+        const latestOrder = JSON.parse(localStorage.getItem('latestOrder') || '{}');
+        const phone = latestOrder.soDienThoai;
+
+        try {
+          const res = await fetch('/api/hoadon');
+          const ds = await res.json();
+          let list = ds || [];
+          if (phone) list = list.filter(hd => (hd.SoDienThoai || '').toString().trim() === phone.trim());
+          else list = [];
+
+          if (list.length === 0) {
+            historyContainer.innerHTML = '<p>Bạn chưa có đơn hàng nào.</p>';
+          } else {
+            let h = '<table class="invoice-table" style="width:100%; border-collapse: collapse;"><thead><tr style="border-bottom: 2px solid #eee; text-align: left;"><th style="padding:10px;">Mã đơn</th><th style="padding:10px;">Ngày</th><th style="padding:10px;">Trạng thái</th><th style="padding:10px;">Thao tác</th></tr></thead><tbody>';
+            list.forEach(hd => {
+              const statusClass = hd.TrangThai === 'Đã xác nhận' ? 'status xacnhan' : 'status';
+              const ngay = hd.NgayLap ? new Date(hd.NgayLap).toLocaleDateString('vi-VN') : '';
+              h += `<tr style="border-bottom: 1px solid #f9f9f9;"><td style="padding:10px;">#${hd.MaHoaDon}</td><td style="padding:10px;">${ngay}</td><td style="padding:10px;"><span class="${statusClass}">${hd.TrangThai || 'Chờ xác nhận'}</span></td><td style="padding:10px;"><a href="invoice.html?ma=${hd.MaHoaDon}" class="btn btn-sm">Chi tiết</a></td></tr>`;
+            });
+            h += '</tbody></table>';
+            historyContainer.innerHTML = h;
+          }
+        } catch (e) {
+          historyContainer.innerHTML = '<p>Lỗi tải lịch sử đơn hàng.</p>';
+        }
+      }
+      loadOrders();
+    });
+  </script>
+</body>
+</html>
